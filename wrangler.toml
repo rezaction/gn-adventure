@@ -1,0 +1,8 @@
+name = "gonest"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "public"
+# Variabel (isi di Cloudflare: Pages > Settings > Variables and Secrets), JANGAN ditulis di sini:
+#   SUPABASE_URL          (teks biasa)
+#   SUPABASE_ANON_KEY     (teks biasa; kunci publik)
+#   SUPABASE_SERVICE_KEY  (RAHASIA / secret)
+#   IP_SALT               (RAHASIA / secret; teks acak panjang)

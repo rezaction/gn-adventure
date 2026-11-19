@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — GoNEST</title><meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="/css/tokens.css"><link rel="stylesheet" href="/css/brand.css"><link rel="stylesheet" href="admin.css">
+</head><body>
+<div id="boot" class="boot"><div class="spin" aria-label="Memuat"></div></div>
+
+<main id="login" class="login" hidden>
+  <form id="loginForm" class="card login__card" novalidate>
+    <a class="brand" style="font-size:22px" href="/"><img class="brand__mark" src="/assets/logo-mark.svg" alt=""><span class="brand__txt"><span class="brand__name"><span class="go">Go</span><span class="nest">NEST</span></span><span class="brand__tag">Tour &amp; Transport</span></span></a>
+    <h1>Masuk admin</h1>
+    <p class="muted">Gunakan akun yang diberikan Owner.</p>
+    <label for="em">Email</label><input id="em" type="email" autocomplete="username" required>
+    <label for="pw">Kata sandi</label><input id="pw" type="password" autocomplete="current-password" required>
+    <p id="loginErr" class="err" role="alert"></p>
+    <button class="btn btn--gold" type="submit" id="loginBtn">Masuk</button>
+  </form>
+</main>
+
+<div id="app" class="app" hidden>
+  <header class="topbar">
+    <button class="burger" id="menuBtn" aria-label="Buka menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a class="brand" style="font-size:15px" href="/admin/"><img class="brand__mark" src="/assets/logo-mark.svg" alt=""><span class="brand__txt"><span class="brand__name"><span class="go">Go</span><span class="nest">NEST</span></span><span class="brand__tag">Admin</span></span></a>
+    <span class="grow"></span><span id="who" class="who"></span>
+    <button class="btn btn--ghost btn--sm" id="logout">Keluar</button>
+  </header>
+  <aside class="side" id="side"><nav id="nav" aria-label="Menu admin"></nav></aside>
+  <section class="main" id="view" tabindex="-1"></section>
+</div>
+<div id="toast" class="toast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/js/brand.js"></script>
+<script src="admin.js"></script>
+</body></html>

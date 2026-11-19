@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GoNEST — Tour & Transport</title>
+<meta name="description" content="GoNEST: paket wisata dan sewa kendaraan dengan sopir. Situs sedang disiapkan.">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="/css/tokens.css"><link rel="stylesheet" href="/css/brand.css">
+<style>.soon{min-height:100dvh;display:grid;place-items:center;text-align:center;padding:24px;background:linear-gradient(180deg,var(--golden-soft),#fff)}.soon .brand{font-size:30px;margin-bottom:28px}h1{font-size:var(--step-3)}</style></head><body>
+<main class="soon"><div><a class="brand" href="/" id="brand"><img class="brand__mark" src="/assets/logo-mark.svg" alt=""><span class="brand__txt"><span class="brand__name"><span class="go">Go</span><span class="nest">NEST</span></span><span class="brand__tag" id="tag">Tour &amp; Transport</span></span></a>
+<h1>Situs sedang kami siapkan</h1><p id="msg">Sebentar lagi paket trip dan armada kami bisa kamu lihat di sini.</p>
+<a class="btn btn--gold" id="wa" href="#" hidden>Chat WhatsApp</a></div></main>
+<script src="/js/brand.js"></script>
+<script>
+/* Bukti bahwa jalur data bekerja: baca pengaturan dari /api/content/settings (kosong bila belum dikonfigurasi). */
+fetch('/api/content/settings').then(function(r){return r.json()}).then(function(j){
+  if(!j.ok)return;var c=j.data.contact||{},b=j.data.brand||{};
+  if(b.tagline&&b.tagline.id){document.getElementById('tag').textContent=b.tagline.id;window.GoNEST&&GoNEST.fitBrand();}
+  if(c.whatsapp){var a=document.getElementById('wa');a.href='https://wa.me/'+c.whatsapp;a.hidden=false;}
+}).catch(function(){});
+</script></body></html>

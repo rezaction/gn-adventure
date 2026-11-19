@@ -1,0 +1,5 @@
+# Salin menjadi .dev.vars untuk uji lokal dengan `npx wrangler pages dev public`
+SUPABASE_URL=https://xxxx.supabase.co
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_KEY=
+IP_SALT=ganti-dengan-teks-acak-panjang
