@@ -17,16 +17,35 @@
       '<a class="btn btn--ghost btn--sm" href="' + esc(GN.pkUrl(p)) + '">' + esc(GN.s('detail')) + '</a></div></div></article>';
   };
   var VCLS = { available: 'ok', limited: 'warn', booked: 'err', maintenance: 'err' };
-  GN.vhCard = function (v) {
+  GN.vhCard = function (v, o) {
+    o = o || {};
     var note = t(v.status_note) || (v.available_from && v.status !== 'available' ? GN.s('availFrom') + ' ' + GN.date(v.available_from) : '');
+    var rng = o.range ? '<span class="pill pill--' + (o.range.ok ? 'ok' : 'err') + '">' + esc(GN.s(o.range.ok ? 'okRange' : 'noRange')) + '</span>' : '';
+    var msg = GN.s('helloVhD') + v.name + (o.range ? ' (' + o.range.text + ')' : '');
     return '<article class="card vc"><div class="vc__img">' + GN.cover(v.photo, v.name) + '</div><div><h3>' + esc(v.name) + '</h3>' +
       '<p class="vc__m">' + v.seats + ' ' + esc(GN.s('seats')) + (note ? ' &middot; ' + esc(note) : '') + '</p>' +
-      '<div class="vc__f"><span class="pill pill--' + (VCLS[v.status] || 'ok') + '">' + esc(GN.s(v.status || 'available')) + '</span>' +
-      (v.price_from != null ? '<b>' + esc(GN.money(v.price_from)) + '</b>' : '') + '</div></div></article>';
+      '<div class="vc__f"><span class="pill pill--' + (VCLS[v.status] || 'ok') + '">' + esc(GN.s(v.status || 'available')) + '</span>' + rng +
+      (v.price_from != null ? '<b>' + esc(GN.money(v.price_from)) + '</b>' : '') + '</div>' +
+      (o.cta ? '<a class="btn btn--gold btn--sm vc__cta" href="' + esc(GN.wa(msg)) + '" target="_blank" rel="noopener">' + esc(GN.s('askVh')) + '</a>' : '') + '</div></article>';
   };
   GN.arCard = function (a) {
-    return '<article class="card ar"><div class="ar__img">' + GN.cover(a.cover, '') + '</div><div class="ar__b">' +
-      (a.category ? '<span class="ar__c">' + esc(a.category) + '</span>' : '') + '<h3>' + esc(t(a.title)) + '</h3><p>' + esc(t(a.excerpt)) + '</p></div></article>';
+    var u = '/journal/?slug=' + encodeURIComponent(a.slug);
+    return '<article class="card ar"><a class="ar__img" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + GN.cover(a.cover, '') + '</a><div class="ar__b">' +
+      (a.category ? '<span class="ar__c">' + esc(a.category) + '</span>' : '') + '<h3><a href="' + esc(u) + '">' + esc(t(a.title)) + '</a></h3><p>' + esc(t(a.excerpt)) + '</p></div></article>';
+  };
+  /* Markdown ringan yang aman: judul, tebal, miring, daftar, tautan, paragraf. Teks di-escape lebih dulu. */
+  GN.md = function (src) {
+    var inl = function (s) {
+      return esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)/g, function (m, a, b) { return '<a href="' + b.replace(/"/g, '%22') + '" rel="noopener">' + a + '</a>'; });
+    };
+    return String(src || '').split(/\n{2,}/).map(function (b) {
+      b = b.trim(); if (!b) return '';
+      if (/^##\s/.test(b)) return '<h2>' + inl(b.replace(/^##\s+/, '')) + '</h2>';
+      if (/^###\s/.test(b)) return '<h3>' + inl(b.replace(/^###\s+/, '')) + '</h3>';
+      if (/^(-|\*)\s/.test(b)) return '<ul>' + b.split(/\n/).map(function (l) { return '<li>' + inl(l.replace(/^(-|\*)\s+/, '')) + '</li>'; }).join('') + '</ul>';
+      return '<p>' + inl(b).replace(/\n/g, '<br>') + '</p>';
+    }).join('');
   };
   GN.head = function (f, light) {
     f = f || {};

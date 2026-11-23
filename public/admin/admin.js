@@ -33,7 +33,7 @@
     var owner = me.role === 'owner';
     var a = [{ h: '#/ringkasan', t: 'Ringkasan' }];
     if (owner) a.push({ g: 'Tampilan (Owner)' }, { h: '#/section', t: 'Section & teks' }, { h: '#/pengaturan', t: 'Pengaturan situs' });
-    a.push({ g: 'Konten' }, { t: 'Paket trip', soon: 'T3' }, { t: 'Kendaraan', soon: 'T3' }, { t: 'Promo & kode', soon: 'T3' }, { t: 'Artikel', soon: 'T3' }, { t: 'Galeri', soon: 'T3' });
+    a.push({ g: 'Konten' }, { h: '#/c/packages', t: 'Paket trip' }, { h: '#/c/vehicles', t: 'Kendaraan' }, { h: '#/c/promos', t: 'Promo & kode' }, { h: '#/c/articles', t: 'Artikel' }, { h: '#/c/gallery_items', t: 'Galeri' }, { h: '#/c/destinations', t: 'Destinasi' });
     a.push({ g: 'Komunikasi' }, { t: 'Kotak pesan', soon: 'T4' });
     a.push({ g: 'Sistem' });
     if (owner) a.push({ h: '#/pengguna', t: 'Pengguna' });
@@ -41,11 +41,11 @@
     return a;
   }
   function renderNav() {
-    var cur = (location.hash || '#/ringkasan').split('/').slice(0, 2).join('/');
+    var cur = location.hash || '#/ringkasan';
     $('#nav').innerHTML = navItems().map(function (i) {
       if (i.g) return '<h4>' + esc(i.g) + '</h4>';
       if (i.soon) return '<a class="soon" aria-disabled="true">' + esc(i.t) + '<small>Tahap ' + esc(i.soon.slice(1)) + '</small></a>';
-      return '<a href="' + i.h + '"' + (cur === i.h ? ' aria-current="page"' : '') + '>' + esc(i.t) + '</a>';
+      return '<a href="' + i.h + '"' + (cur === i.h || (i.h.indexOf('#/c/') === 0 && cur.indexOf(i.h) === 0) || (i.h === '#/section' && cur.indexOf('#/section') === 0) ? ' aria-current="page"' : '') + '>' + esc(i.t) + '</a>';
     }).join('');
   }
 
@@ -129,11 +129,11 @@
     var h = location.hash || '#/ringkasan';
     var base = h.split('/').slice(0, 2).join('/');
     if ((h === '#/pengguna' || base === '#/section' || base === '#/pengaturan') && me.role !== 'owner') h = '#/ringkasan';
-    if (!/^#\/(ringkasan|pengguna|akun|section|pengaturan)(\/[A-Za-z0-9._-]+)?$/.test(h)) h = '#/ringkasan';
+    if (!/^#\/(ringkasan|pengguna|akun|section|pengaturan|c)(\/[A-Za-z0-9._-]+){0,2}$/.test(h)) h = '#/ringkasan';
     base = h.split('/').slice(0, 2).join('/');
     renderNav(); $('#side').classList.remove('open'); $('#menuBtn').setAttribute('aria-expanded', 'false');
     var ext = window.GNAdminViews || {};
-    var f = { '#/ringkasan': viewHome, '#/pengguna': viewUsers, '#/akun': viewAccount, '#/section': function () { return ext.section(h.split('/')[2]); }, '#/pengaturan': function () { return ext.settings(); } }[base];
+    var f = { '#/ringkasan': viewHome, '#/pengguna': viewUsers, '#/akun': viewAccount, '#/section': function () { return ext.section(h.split('/')[2]); }, '#/pengaturan': function () { return ext.settings(); }, '#/c': function () { return ext.crud(h.split('/')[2], h.split('/')[3]); } }[base];
     Promise.resolve(f()).catch(function (e) { $('#view').innerHTML = '<p class="err">' + esc(e.message) + '</p>'; });
     document.title = 'Admin — GoNEST';
   }

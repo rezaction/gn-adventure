@@ -36,3 +36,10 @@ Isi `fields` yang dipakai seed: `eyebrow`, `heading`, `heading2` (opsional), `de
 
 ## Tautan sementara
 Halaman Kendaraan, Destinasi, Jurnal, Kontak, dan Booking belum ada (Tahap 3-4). Tautan menu ke sana otomatis diarahkan ke bagian di beranda (`GN.href` di `public/js/core.js`). Hapus dari daftar `FALLBACK` saat halamannya jadi.
+
+## Tahap 3
+- Halaman publik baru: `/vehicles/` (cek ketersediaan per tanggal lewat `/api/availability`), `/gallery/` (desktop: indeks destinasi + pratinjau saat disorot; HP: chip + strip; semua: lightbox), `/journal/` dan `/journal/?slug=...` (isi Markdown ringan).
+- Promo: kartu di beranda (`#promo`), tombol salin kode dan klaim via WhatsApp, popup otomatis untuk promo bertanda "Tampilkan sebagai popup". Pengaturan popup ada di `site_settings.promo_popup` (`enabled, delay_seconds, scroll_percent, once_per_session, snooze_days`).
+- Admin umum dan Owner: menu Konten (Paket trip, Kendaraan + tanggal terpakai, Promo & kode, Artikel, Galeri + unggah banyak foto, Destinasi). Foto otomatis diperkecil ke WebP.
+- Kendaraan: status tampil manual + tabel `vehicle_blocks` (tanggal terpakai) yang dipakai `vehicles_available`.
+- Galeri: kolom `category` menjadi indeks destinasi di halaman galeri.

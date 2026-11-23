@@ -31,6 +31,8 @@
           order:function(c){q.params.push('order='+c);return b;},
           eq:function(c,v){q.params.push(c+'=eq.'+v);return b;},
           single:function(){q.single=true;return b;},
+          insert:function(o){q.method='POST';q.body=o;return b;},
+          delete:function(){q.method='DELETE';return b;},
           update:function(o){q.method='PATCH';q.body=o;return b;},
           upsert:function(o){q.method='POST';q.body=o;q.params.push('on_conflict=key');return b;},
           then:function(a,c){return run().then(a,c);}

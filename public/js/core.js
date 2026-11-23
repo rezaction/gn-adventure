@@ -18,14 +18,18 @@
       soonVh: 'Daftar armada sedang diperbarui. Hubungi admin untuk cek ketersediaan.', menu: 'Menu', lang: 'Bahasa', chat: 'Chat dengan kami',
       hello: 'Halo GoNEST, saya ingin bertanya.', helloPk: 'Halo GoNEST, saya tertarik dengan paket: ', helloVh: 'Halo GoNEST, saya ingin cek ketersediaan: ',
       itinerary: 'Rencana perjalanan', included: 'Sudah termasuk', excluded: 'Belum termasuk', highlights: 'Sorotan', back: 'Semua paket',
-      notFound: 'Paket tidak ditemukan.', pkTitle: 'Paket Trip', pkLead: 'Pilih jenis trip, lihat rincian biayanya, lalu tanya langsung ke admin.', day1: 'Hari', readMore: 'Baca selengkapnya', contact: 'Kontak', hours: 'Jam layanan', explore: 'Jelajahi' },
+      notFound: 'Paket tidak ditemukan.', pkTitle: 'Paket Trip', pkLead: 'Pilih jenis trip, lihat rincian biayanya, lalu tanya langsung ke admin.', day1: 'Hari', readMore: 'Baca selengkapnya', contact: 'Kontak', hours: 'Jam layanan', explore: 'Jelajahi', vhTitle: 'Armada & Sewa Kendaraan', vhLead: 'Pilih kendaraan, cek ketersediaan di tanggalmu, lalu tanya langsung ke admin.', check: 'Cek ketersediaan', dFrom: 'Tanggal mulai', dTo: 'Sampai (opsional)', okRange: 'Tersedia di tanggal itu', noRange: 'Tidak tersedia di tanggal itu', askVh: 'Tanya & pesan', badRange: 'Tanggal sampai tidak boleh sebelum tanggal mulai.', availErr: 'Gagal mengecek ketersediaan. Coba lagi.', helloVhD: 'Halo GoNEST, saya ingin sewa ',
+      galTitle: 'Galeri Perjalanan', galLead: 'Momen dari perjalanan bersama GoNEST. Arahkan kursor ke nama destinasi untuk melihat cuplikan.', galAll: 'Semua', photos: 'foto', jrTitle: 'Jurnal', jrLead: 'Tips, rute, dan cerita perjalanan dari tim GoNEST.', jrBack: 'Semua artikel', jrEmpty: 'Artikel pertama segera terbit.', empty: 'Belum ada data.',
+      promoTitle: 'Promo & kode', promoLead: 'Salin kodenya, lalu sebutkan saat memesan lewat admin.', soonPr: 'Belum ada promo aktif. Pantau terus.', claim: 'Klaim promo', copy: 'Salin kode', copied: 'Tersalin', close: 'Tutup', prev: 'Sebelumnya', next: 'Berikutnya', until: 'Berlaku sampai', terms: 'Syarat & ketentuan', off: 'Diskon', pctOff: '% off', helloPr: 'Halo GoNEST, saya ingin klaim promo ', zoom: 'Perbesar foto', read: 'Baca', },
     en: { from: 'From', days: 'days', day: 'day', detail: 'View details', ask: 'Ask on WhatsApp', all: 'All', seats: 'seats',
       available: 'Available', limited: 'Limited', booked: 'Booked', maintenance: 'Maintenance', availFrom: 'Available from',
       open: 'Open trip', private: 'Private', family: 'Family', custom: 'Custom', soonPk: 'New trip packages are coming soon. Ask our admin directly about your plans.',
       soonVh: 'Our fleet list is being updated. Contact our admin to check availability.', menu: 'Menu', lang: 'Language', chat: 'Chat with us',
       hello: 'Hello GoNEST, I would like to ask something.', helloPk: 'Hello GoNEST, I am interested in the package: ', helloVh: 'Hello GoNEST, I would like to check availability: ',
       itinerary: 'Itinerary', included: 'Included', excluded: 'Not included', highlights: 'Highlights', back: 'All trips',
-      notFound: 'Package not found.', pkTitle: 'Trips', pkLead: 'Pick a trip type, see the cost breakdown, then ask our admin directly.', day1: 'Day', readMore: 'Read more', contact: 'Contact', hours: 'Service hours', explore: 'Explore' }
+      notFound: 'Package not found.', pkTitle: 'Trips', pkLead: 'Pick a trip type, see the cost breakdown, then ask our admin directly.', day1: 'Day', readMore: 'Read more', contact: 'Contact', hours: 'Service hours', explore: 'Explore', vhTitle: 'Fleet & Vehicle Rental', vhLead: 'Pick a vehicle, check availability for your dates, then ask our admin directly.', check: 'Check availability', dFrom: 'Start date', dTo: 'Until (optional)', okRange: 'Available on those dates', noRange: 'Not available on those dates', askVh: 'Ask & book', badRange: 'End date cannot be before start date.', availErr: 'Could not check availability. Please try again.', helloVhD: 'Hello GoNEST, I would like to rent ',
+      galTitle: 'Travel Gallery', galLead: 'Moments from trips with GoNEST. Hover a destination name for a preview.', galAll: 'All', photos: 'photos', jrTitle: 'Journal', jrLead: 'Tips, routes and travel stories from the GoNEST team.', jrBack: 'All articles', jrEmpty: 'The first article is coming soon.', empty: 'Nothing here yet.',
+      promoTitle: 'Promos & codes', promoLead: 'Copy the code and mention it when you book through our admin.', soonPr: 'No active promos right now. Check back soon.', claim: 'Claim promo', copy: 'Copy code', copied: 'Copied', close: 'Close', prev: 'Previous', next: 'Next', until: 'Valid until', terms: 'Terms & conditions', off: 'Discount', pctOff: '% off', helloPr: 'Hello GoNEST, I would like to claim the promo ', zoom: 'Enlarge photo', read: 'Read', }
   };
   GN.s = function (k) { return (S[GN.lang] && S[GN.lang][k]) || S.id[k] || k; };
   GN.money = function (n) { return n == null ? '' : 'Rp ' + new Intl.NumberFormat('id-ID').format(n); };
@@ -42,8 +46,8 @@
   GN.img = function (p) { if (!p) return ''; return /^(https?:)?\/\//.test(p) || p.charAt(0) === '/' ? p : '/api/image/' + p.split('/').map(encodeURIComponent).join('/'); };
 
   /* Halaman yang sudah ada; tautan ke halaman lain sementara diarahkan ke bagian di beranda. */
-  var LIVE = ['/', '/packages'];
-  var FALLBACK = { '/vehicles': '/#kendaraan', '/destinations': '/#galeri', '/journal': '/#jurnal', '/contact': '/#kontak', '/booking': '/#kontak', '/faq': '/#kontak', '/#promo': '/#paket' };
+  var LIVE = ['/', '/packages', '/vehicles', '/gallery', '/journal'];
+  var FALLBACK = { '/destinations': '/gallery', '/contact': '/#kontak', '/booking': '/#kontak', '/faq': '/#kontak' };
   GN.href = function (h) {
     h = h || '#'; if (!/^\//.test(h)) return h;
     if (FALLBACK[h]) return FALLBACK[h];
@@ -157,6 +161,7 @@
       GN.settings = st; theme(st.theme); shell();
       if (GN.ambient) GN.ambient((st.theme || {}).ambient);
       if (GN.failed) { var m = $('main'); if (m) { var b = document.createElement('div'); b.className = 'wrap'; b.innerHTML = '<div class="empty" role="alert" style="margin-top:24px"><p><b>Konten belum bisa dimuat.</b> ' + GN.esc(GN.failed) + '</p><button class="btn btn--gold btn--sm" type="button" onclick="location.reload()">Coba lagi</button></div>'; m.prepend(b); } }
+      if (GN.promoPopup && !GN.failed) GN.get('promos').then(function (l) { GN.promoPopup(l, st.promo_popup); }, function () {});
       if (init) return init(st);
     });
   };

@@ -17,10 +17,14 @@
       var i = w.querySelector('#' + id); i.value = val == null ? '' : val; get = function () { return i.value.trim(); };
     } else if (t === 'i18n') {
       w.innerHTML = lbl(def, id + 'a') + '<div class="i18n">' + ['id', 'en'].map(function (l) {
-        return '<div><span class="lg">' + l.toUpperCase() + '</span>' + (def.long ? '<textarea id="' + id + (l === 'id' ? 'a' : 'b') + '" rows="3"></textarea>' : '<input id="' + id + (l === 'id' ? 'a' : 'b') + '">') + '</div>';
+        return '<div><span class="lg">' + l.toUpperCase() + '</span>' + (def.long ? '<textarea id="' + id + (l === 'id' ? 'a' : 'b') + '" rows="' + (def.rows || 3) + '"></textarea>' : '<input id="' + id + (l === 'id' ? 'a' : 'b') + '">') + '</div>';
       }).join('') + '</div>' + help(def);
       var a = w.querySelector('#' + id + 'a'), b = w.querySelector('#' + id + 'b'), v = val && typeof val === 'object' ? val : {};
       a.value = v.id || ''; b.value = v.en || ''; get = function () { return { id: a.value.trim(), en: b.value.trim() }; };
+    } else if (t === 'num' || t === 'date') {
+      w.innerHTML = lbl(def, id) + '<input id="' + id + '" type="' + (t === 'num' ? 'number' : 'date') + '"' + (t === 'num' ? ' inputmode="decimal" step="any"' + (def.min != null ? ' min="' + def.min + '"' : '') : '') + '>' + help(def);
+      var ni = w.querySelector('input'); ni.value = val == null ? '' : String(val).slice(0, 10 * (t === 'date')) || (t === 'num' ? String(val) : '');
+      get = function () { return ni.value === '' ? null : (t === 'num' ? Number(ni.value) : ni.value); };
     } else if (t === 'bool') {
       w.className = 'fld fld--bool'; w.innerHTML = '<label class="chk"><input type="checkbox" id="' + id + '"> <span>' + esc(def.label) + '</span></label>' + help(def);
       var c = w.querySelector('input'); c.checked = val !== false && !!(val === undefined ? def.def : val); get = function () { return c.checked; };
@@ -52,7 +56,7 @@
     def.fields.forEach(function (f) { var p = F(f, base[f.k]); parts.push([f.k, p, f]); box.appendChild(p.el); });
     return { el: box, get: function () {
       var out = clone(base) || {};
-      parts.forEach(function (p) { var v = p[1].get(); if (p[2].opt && (v === '' || (v && typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).some(function (k) { return v[k] && (typeof v[k] !== 'object' || Object.keys(v[k]).some(function (z) { return v[k][z]; })); })))) { delete out[p[0]]; } else out[p[0]] = v; });
+      parts.forEach(function (p) { var v = p[1].get(); if (p[2].opt && (v === '' || v === null || (v && typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).some(function (k) { return v[k] && (typeof v[k] !== 'object' || Object.keys(v[k]).some(function (z) { return v[k][z]; })); })))) { delete out[p[0]]; } else out[p[0]] = v; });
       return out; } };
   }
 
@@ -76,8 +80,9 @@
         row.appendChild(bar); row.appendChild(it.el); host.appendChild(row);
       });
     }
-    (Array.isArray(val) ? val : []).forEach(function (v) { items.push(group({ fields: def.item }, v)); });
-    add.onclick = function () { items.push(group({ fields: def.item }, {})); draw(); };
+    var mk = function (v) { return def.of ? F(def.of, v) : group({ fields: def.item }, v); };
+    (Array.isArray(val) ? val : []).forEach(function (v) { items.push(mk(v)); });
+    add.onclick = function () { items.push(mk(def.of ? (def.of.t === 'i18n' ? {} : '') : {})); draw(); };
     draw();
     return { el: w, get: function () { return items.map(function (i) { return i.get(); }); } };
   }
@@ -224,5 +229,6 @@
     });
   }
 
+  window.GNForm = { upload: async function (file, dir) { var blob = await toWebp(file, 1600), path = dir + '/' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6) + '.webp'; var r = await A.sb().storage.from('media').upload(path, blob, { contentType: 'image/webp', upsert: false }); if (r.error) throw new Error(r.error.message); return path; }, F: F, group: group, el: el, clone: clone };
   window.GNAdminViews = { section: viewSection, settings: viewSettings };
 })();

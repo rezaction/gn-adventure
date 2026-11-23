@@ -28,6 +28,11 @@
     var list = (data.packages || []).slice(0, 6);
     return '<section class="sec" id="' + id + '"><div class="wrap">' + GN.head(f) + (list.length ? '<div class="strip">' + list.map(GN.pkCard).join('') + '</div>' : emptyBox(GN.s('soonPk'))) + foot(f) + '</div></section>';
   }
+  function promos() {
+    var list = (data.promos || []).slice(0, 4);
+    return '<section class="sec" id="promo"><div class="wrap">' + GN.head({ eyebrow: GN.lang === 'en' ? 'Promo' : 'Promo', heading: GN.s('promoTitle'), description: GN.s('promoLead') }) +
+      (list.length ? '<div class="strip">' + list.map(function (p) { return GN.promoCard(p); }).join('') + '</div>' : '<div class="empty"><p>' + esc(GN.s('soonPr')) + '</p></div>') + '</div></section>';
+  }
   function vehicles(f, id) {
     var list = (data.vehicles || []).slice(0, 6);
     return '<section class="sec" id="' + id + '"><div class="wrap">' + GN.head(f) + (list.length ? '<div class="vh-grid">' + list.map(GN.vhCard).join('') + '</div>' : emptyBox(GN.s('soonVh'))) + foot(f) + '</div></section>';
@@ -35,7 +40,7 @@
   function gallery(f, id) {
     var list = (data.gallery || []).slice(0, 12); if (!list.length) return '';
     return '<section class="sec" id="' + id + '"><div class="wrap">' + GN.head(f) + '<div class="gstrip">' + list.map(function (g) {
-      return '<figure><img src="' + esc(GN.img(g.image)) + '" alt="' + esc(t(g.title)) + '" loading="lazy" decoding="async">' + (t(g.title) ? '<figcaption>' + esc(t(g.title)) + '</figcaption>' : '') + '</figure>';
+      return '<figure><button type="button" data-g="' + list.indexOf(g) + '" aria-label="' + esc(GN.s('zoom') + ': ' + (t(g.title) || '')) + '"><img src="' + esc(GN.img(g.image)) + '" alt="' + esc(t(g.title)) + '" loading="lazy" decoding="async"></button>' + (t(g.title) ? '<figcaption>' + esc(t(g.title)) + '</figcaption>' : '') + '</figure>';
     }).join('') + '</div>' + foot(f) + '</div></section>';
   }
   function journal(f, id) {
@@ -56,10 +61,12 @@
       var out = fn(s.fields || {}, ANCHOR[s.id]);
       if (out && ANCHOR[s.id]) qn.push({ id: ANCHOR[s.id], label: t((s.fields || {}).eyebrow) || t((s.fields || {}).heading) });
       html += out;
+      if (s.id === 'home.packages') { html += promos(); qn.push({ id: 'promo', label: GN.s('promoTitle').split(' ')[0] }); }
     });
     $('#home').innerHTML = html;
     var q = $('#qnav'); q.innerHTML = '<div class="qnav__in">' + qn.filter(function (x) { return x.id !== 'kontak'; }).map(function (x) { return '<a href="#' + x.id + '">' + esc(x.label) + '</a>'; }).join('') + '</div>';
-    q.hidden = !qn.length; watch();
+    q.hidden = !qn.length; watch(); GN.bindCopy($('#home'));
+    [].forEach.call(document.querySelectorAll('#galeri [data-g]'), function (b) { b.onclick = function () { GN.lightbox(GN.lightboxFrom((data.gallery || []).slice(0, 12)), +b.dataset.g, b); }; });
     var h = (data.sections.filter(function (s) { return s.id === 'home.hero'; })[0] || {}).fields;
     if (h && t(h.heading)) document.title = (t(h.heading) + ' ' + (t(h.heading2) || '')).trim() + ' | ' + ((GN.settings.brand || {}).name || 'GoNEST');
     if (window.GoNEST) GoNEST.fitBrand();
@@ -82,7 +89,7 @@
   GN.onRender(render);
   GN.boot(function () {
     var safe = function (p, d) { return p.catch(function () { return d; }); };
-    return Promise.all([safe(GN.get('sections', { page: 'home' }), []), safe(GN.get('packages', { limit: 6 }), []), safe(GN.get('vehicles'), []), safe(GN.get('gallery'), []), safe(GN.get('articles', { limit: 3 }), [])])
-      .then(function (r) { data = { sections: r[0], packages: r[1], vehicles: r[2], gallery: r[3], articles: r[4] }; render(); });
+    return Promise.all([safe(GN.get('sections', { page: 'home' }), []), safe(GN.get('packages', { limit: 6 }), []), safe(GN.get('vehicles'), []), safe(GN.get('gallery'), []), safe(GN.get('articles', { limit: 3 }), []), safe(GN.get('promos'), [])])
+      .then(function (r) { data = { sections: r[0], packages: r[1], vehicles: r[2], gallery: r[3], articles: r[4], promos: r[5] }; render(); });
   });
 })();
