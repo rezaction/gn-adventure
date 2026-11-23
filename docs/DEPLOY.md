@@ -8,7 +8,7 @@ Semua gratis: GitHub, Supabase (free), Cloudflare Pages (free). Tanpa kartu kred
 
 ## 2. Supabase
 1. supabase.com > New project. Region: **Southeast Asia (Singapore)**. Simpan password database.
-2. SQL Editor: jalankan isi `supabase/migrations/001_schema.sql`, lalu `002_seed.sql` (berurutan; aman dijalankan ulang).
+2. SQL Editor: jalankan isi `supabase/migrations/001_schema.sql`, lalu `002_seed.sql` (berurutan; aman dijalankan ulang), lalu `003_grants.sql` (hak akses tabel untuk Data API; wajib bila muncul "permission denied for table ...").
 3. Authentication > Users > **Add user** (centang Auto Confirm): email + kata sandi kamu sebagai Owner. Salin **UID**-nya.
 4. SQL Editor, jadikan dia Owner:
    ```sql

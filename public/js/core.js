@@ -153,9 +153,10 @@
   GN.boot = function (init) {
     document.documentElement.lang = GN.lang;
     buildHeader({}); 
-    GN.get('settings').then(function (st) { return st; }, function () { return {}; }).then(function (st) {
+    GN.get('settings').then(function (st) { return st; }, function (e) { GN.failed = e.message || 'gagal'; return {}; }).then(function (st) {
       GN.settings = st; theme(st.theme); shell();
       if (GN.ambient) GN.ambient((st.theme || {}).ambient);
+      if (GN.failed) { var m = $('main'); if (m) { var b = document.createElement('div'); b.className = 'wrap'; b.innerHTML = '<div class="empty" role="alert" style="margin-top:24px"><p><b>Konten belum bisa dimuat.</b> ' + GN.esc(GN.failed) + '</p><button class="btn btn--gold btn--sm" type="button" onclick="location.reload()">Coba lagi</button></div>'; m.prepend(b); } }
       if (init) return init(st);
     });
   };

@@ -13,7 +13,10 @@ export async function rest(env, path, { method = 'GET', body, token, service = f
     if (!env.SUPABASE_SERVICE_KEY) throw new HttpError(500, 'SUPABASE_SERVICE_KEY belum diatur');
     key = env.SUPABASE_SERVICE_KEY;
   }
-  const headers = { apikey: key, authorization: `Bearer ${token || key}` };
+  // Kunci baru Supabase (sb_publishable_/sb_secret_) bukan JWT: kirim lewat apikey saja.
+  const headers = { apikey: key };
+  if (token) headers.authorization = `Bearer ${token}`;
+  else if (!String(key).startsWith('sb_')) headers.authorization = `Bearer ${key}`;
   if (body !== undefined) headers['content-type'] = 'application/json';
   if (prefer) headers.prefer = prefer;
   const res = await fetch(`${url}/rest/v1/${path}`, { method, headers, body: body === undefined ? undefined : JSON.stringify(body) });
@@ -58,7 +61,7 @@ export async function authAdmin(env, path, { method = 'GET', body } = {}) {
   if (!env.SUPABASE_SERVICE_KEY) throw new HttpError(500, 'SUPABASE_SERVICE_KEY belum diatur');
   const res = await fetch(`${url}/auth/v1/admin/${path}`, {
     method,
-    headers: { apikey: env.SUPABASE_SERVICE_KEY, authorization: `Bearer ${env.SUPABASE_SERVICE_KEY}`, 'content-type': 'application/json' },
+    headers: Object.assign({ apikey: env.SUPABASE_SERVICE_KEY, 'content-type': 'application/json' }, String(env.SUPABASE_SERVICE_KEY).startsWith('sb_') ? {} : { authorization: `Bearer ${env.SUPABASE_SERVICE_KEY}` }),
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const text = await res.text();

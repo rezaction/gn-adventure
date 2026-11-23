@@ -10,5 +10,7 @@ $P -f supabase/migrations/001_schema.sql
 $P -f supabase/migrations/002_seed.sql
 $P -f supabase/migrations/001_schema.sql   # jalan ulang harus aman
 $P -f supabase/migrations/002_seed.sql
+$P -f supabase/migrations/003_grants.sql
+$P -f supabase/migrations/003_grants.sql
 $P -f tests/rls_test.sql
 echo "SEMUA TES SQL LULUS"
