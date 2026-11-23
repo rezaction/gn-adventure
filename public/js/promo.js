@@ -27,7 +27,7 @@
     var key = 'gn_pop_' + p.id, ss = null;
     try { var last = +localStorage.getItem(key) || 0; if (last && Date.now() - last < (cfg.snooze_days == null ? 3 : cfg.snooze_days) * 864e5) return; if (cfg.once_per_session !== false && sessionStorage.getItem(key)) return; } catch (e) {}
     function open() {
-      if (shown) return; shown = true; cleanup();
+      if (shown) return; var ae = document.activeElement; if (ae && /^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)) { clearTimeout(tm); tm = setTimeout(open, 5000); return; } shown = true; cleanup();
       var from = document.activeElement, o = document.createElement('div'); o.className = 'pop'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-modal', 'true'); o.setAttribute('aria-label', t(p.title));
       o.innerHTML = '<div class="pop__box"><button class="pop__x" type="button" aria-label="' + esc(GN.s('close')) + '">&times;</button>' + GN.promoCard(p, true) + '</div>';
       document.body.appendChild(o); GN.bindCopy(o);

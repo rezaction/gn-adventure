@@ -18,7 +18,7 @@ with sync_playwright() as p:
     ins=pg.locator(".i18n input"); check(ins.count()>=8,"form hero punya kolom ID/EN")
     first=pg.locator(".i18n").nth(1).locator("input").first  # heading id
     first.fill("Liburan tanpa ribet,")
-    pg.set_input_files("input[type=file]","/tmp/t.png"); pg.wait_for_selector(".img__pv img"); check(pg.locator(".img__pv img").count()==1,"gambar terunggah & pratinjau tampil")
+    pg.set_input_files("input[type=file]","/tmp/t.jpg"); pg.wait_for_selector(".img__pv img"); check(pg.locator(".img__pv img").count()==1,"JPG 3000x2000 terunggah & pratinjau tampil (CSP admin aktif)")
     pg.click("text=Simpan perubahan"); pg.wait_for_selector(".toast.on"); check("Tersimpan" in pg.inner_text("#toast"),"simpan section")
     h=[s for s in api("sections?page=home") if s["id"]=="home.hero"][0]["fields"]
     check(h["heading"]["id"]=="Liburan tanpa ribet,","API publik memuat judul baru"); check(h["image"].startswith("site/") and h["image"].endswith(".webp"),"path gambar disimpan: "+h["image"])

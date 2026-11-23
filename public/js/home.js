@@ -69,6 +69,7 @@
     [].forEach.call(document.querySelectorAll('#galeri [data-g]'), function (b) { b.onclick = function () { GN.lightbox(GN.lightboxFrom((data.gallery || []).slice(0, 12)), +b.dataset.g, b); }; });
     var h = (data.sections.filter(function (s) { return s.id === 'home.hero'; })[0] || {}).fields;
     if (h && t(h.heading)) document.title = (t(h.heading) + ' ' + (t(h.heading2) || '')).trim() + ' | ' + ((GN.settings.brand || {}).name || 'GoNEST');
+    GN.seo({ title: document.title, description: t((h || {}).description), image: (h || {}).image, jsonld: GN.orgLd() });
     if (window.GoNEST) GoNEST.fitBrand();
   }
   var io;

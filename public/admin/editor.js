@@ -88,33 +88,45 @@
   }
 
   /* ---------- gambar: perkecil di browser, simpan WebP ke Storage ---------- */
-  function toWebp(file, max) {
-    return new Promise(function (res, rej) {
-      var img = new Image(), u = URL.createObjectURL(file);
-      img.onload = function () {
-        var k = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement('canvas');
-        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-        URL.revokeObjectURL(u); c.toBlob(function (b) { b ? res(b) : rej(new Error('Gagal mengubah gambar')); }, 'image/webp', 0.82);
-      };
-      img.onerror = function () { URL.revokeObjectURL(u); rej(new Error('File bukan gambar yang valid')); }; img.src = u;
-    });
+  /* Terima semua gambar yang bisa dibaca browser (JPG, PNG, WebP, GIF, AVIF, HEIC di Safari, dll).
+     Diperkecil (sisi terpanjang maks. 'max' px), orientasi EXIF dihormati, lalu disimpan sebagai WebP
+     (atau JPEG bila browser tidak bisa membuat WebP). Tidak memakai blob: URL karena dilarang oleh CSP admin. */
+  async function decode(file) {
+    if (window.createImageBitmap) { try { return await createImageBitmap(file); } catch (e) { /* lanjut ke cara lain */ } }
+    var url = await new Promise(function (res, rej) { var r = new FileReader(); r.onload = function () { res(r.result); }; r.onerror = function () { rej(new Error('File tidak bisa dibaca')); }; r.readAsDataURL(file); });
+    return await new Promise(function (res, rej) { var i = new Image(); i.onload = function () { res(i); }; i.onerror = function () { rej(new Error('Format gambar ini tidak didukung browser. Simpan sebagai JPG atau PNG lalu coba lagi.')); }; i.src = url; });
+  }
+  async function prepare(file, max) {
+    var img = await decode(file), w = img.width || img.naturalWidth, h = img.height || img.naturalHeight;
+    if (!w || !h) throw new Error('Gambar kosong atau rusak');
+    var k = Math.min(1, max / Math.max(w, h)), c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w * k)); c.height = Math.max(1, Math.round(h * k));
+    var cx = c.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, c.width, c.height); cx.drawImage(img, 0, 0, c.width, c.height);
+    if (img.close) img.close();
+    var out = function (type, q) { return new Promise(function (res) { c.toBlob(res, type, q); }); };
+    var b = await out('image/webp', 0.82), ext = 'webp';
+    if (!b || b.type !== 'image/webp') { b = await out('image/jpeg', 0.84); ext = 'jpg'; }
+    if (!b) throw new Error('Gagal memproses gambar');
+    return { blob: b, ext: ext, type: b.type };
+  }
+  async function uploadImage(file, dir, max) {
+    if (!file) throw new Error('Tidak ada file');
+    if (file.size > 25 * 1024 * 1024) throw new Error('File terlalu besar (maks. 25 MB).');
+    var p = await prepare(file, max || 1600), path = (dir || 'site') + '/' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6) + '.' + p.ext;
+    var r = await A.sb().storage.from('media').upload(path, p.blob, { contentType: p.type, upsert: false });
+    if (r.error) throw new Error('Gagal mengunggah: ' + r.error.message);
+    return path;
   }
   function imageField(def, val, w, id) {
     var cur = val || '';
-    w.className = 'fld fld--box'; w.innerHTML = lbl(def, id) + '<div class="img"><div class="img__pv"></div><div class="img__ctl"><input type="file" id="' + id + '" accept="image/*"><button type="button" class="btn btn--ghost btn--sm">Hapus gambar</button><p class="help">Otomatis diperkecil (maks. 1600 px) dan disimpan sebagai WebP.</p><p class="err" role="alert"></p></div></div>';
+    w.className = 'fld fld--box'; w.innerHTML = lbl(def, id) + '<div class="img"><div class="img__pv"></div><div class="img__ctl"><input type="file" id="' + id + '" accept="image/*"><button type="button" class="btn btn--ghost btn--sm">Hapus gambar</button><p class="help">Semua format gambar diterima (JPG, PNG, WebP, dll). Otomatis diperkecil (maks. 1600 px) dan dikompres ke WebP.</p><p class="err" role="alert"></p></div></div>';
     var pv = w.querySelector('.img__pv'), inp = w.querySelector('input'), err = w.querySelector('.err');
     var show = function () { pv.innerHTML = cur ? '<img alt="" src="' + esc(/^(\/|https?:)/.test(cur) ? cur : '/api/image/' + cur) + '">' : '<span class="muted">Belum ada gambar</span>'; };
     show();
     w.querySelector('button').onclick = function () { cur = ''; show(); };
     inp.onchange = async function () {
       var f = inp.files[0]; if (!f) return; err.textContent = '';
-      if (f.size > 15 * 1024 * 1024) { err.textContent = 'File terlalu besar (maks. 15 MB).'; return; }
-      pv.innerHTML = '<span class="muted">Mengunggah…</span>';
-      try {
-        var blob = await toWebp(f, def.max || 1600), path = (def.dir || 'site') + '/' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6) + '.webp';
-        var r = await A.sb().storage.from('media').upload(path, blob, { contentType: 'image/webp', upsert: false });
-        if (r.error) throw new Error(r.error.message); cur = path;
-      } catch (e) { err.textContent = e.message; }
+      pv.innerHTML = '<span class="muted">Memproses & mengunggah…</span>';
+      try { cur = await uploadImage(f, def.dir, def.max); } catch (e) { err.textContent = e.message; }
       show(); inp.value = '';
     };
     return { el: w, get: function () { return cur; } };
@@ -167,6 +179,25 @@
   function pathsList() { if (!$('#dl-paths')) { var d = el('datalist'); d.id = 'dl-paths'; d.innerHTML = PATHS.map(function (p) { return '<option value="' + p + '">'; }).join(''); document.body.appendChild(d); } }
   function fail(e) { A.toast(e.message || 'Gagal menyimpan', true); }
 
+  /* Riwayat versi: 30 versi terakhir tiap baris disimpan otomatis oleh database; Owner bisa memulihkan. */
+  function historyBox(table, key, restore) {
+    var box = el('div', 'hist'), btn = el('button', 'btn btn--ghost btn--sm', 'Riwayat versi'); btn.type = 'button'; var out = el('div', 'hist__l'); box.appendChild(btn); box.appendChild(out);
+    btn.onclick = async function () {
+      if (out.innerHTML) { out.innerHTML = ''; return; }
+      out.innerHTML = '<p class="muted">Memuat…</p>';
+      var r = await A.sb().from('revisions').select('*').eq('table_name', table).eq('row_key', key).order('changed_at', { ascending: false });
+      if (r.error) { out.innerHTML = '<p class="err">' + esc(r.error.message) + '</p>'; return; }
+      out.innerHTML = (r.data || []).length ? '' : '<p class="muted">Belum ada versi lama. Versi tersimpan setiap kali kamu menyimpan perubahan.</p>';
+      (r.data || []).forEach(function (rev) {
+        var row = el('div', 'hist__i'), b = el('button', 'btn btn--ghost btn--sm', 'Pulihkan'); b.type = 'button';
+        row.innerHTML = '<span>' + esc(new Date(rev.changed_at).toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })) + '</span>'; row.appendChild(b);
+        b.onclick = async function () { if (!confirm('Pulihkan versi ini? Isi saat ini akan diganti (dan tetap tersimpan di riwayat).')) return; var u = await restore(rev.data); if (u && u.error) fail(u.error); else { A.toast('Versi dipulihkan'); } };
+        out.appendChild(row);
+      });
+    };
+    return box;
+  }
+
   /* ---------- tampilan: daftar & editor section ---------- */
   async function viewSection(id) {
     pathsList(); var v = $('#view'), sb = A.sb();
@@ -188,6 +219,7 @@
     var vis = F({ t: 'bool', label: 'Tampilkan section ini di situs', def: true }, s.visible); card.appendChild(vis.el);
     var save = el('button', 'btn btn--gold', 'Simpan perubahan'); save.type = 'button'; card.appendChild(save);
     var vw = el('a', 'btn btn--ghost', 'Lihat situs'); vw.href = '/'; vw.target = '_blank'; vw.rel = 'noopener'; vw.style.marginLeft = '8px'; card.appendChild(vw);
+    card.appendChild(historyBox('sections', id, function (d) { return sb.from('sections').update({ fields: d.fields, visible: d.visible }).eq('id', id).then(function (u) { if (!u.error) viewSection(id); return u; }); }));
     v.appendChild(card);
     save.onclick = async function () {
       save.disabled = true; save.textContent = 'Menyimpan…';
@@ -220,6 +252,7 @@
       det.appendChild(el('summary', '', esc(d.title)));
       var form = group({ fields: d.fields }, by[d.key]); det.appendChild(form.el);
       var b = el('button', 'btn btn--gold', 'Simpan ' + esc(d.title.toLowerCase())); b.type = 'button'; det.appendChild(b);
+      det.appendChild(historyBox('site_settings', d.key, function (rv) { return sb.from('site_settings').upsert({ key: d.key, value: rv.value }).then(function (u) { if (!u.error) viewSettings(); return u; }); }));
       b.onclick = async function () {
         var val; try { val = clean(d.key, form.get()); } catch (e) { return fail(e); }
         b.disabled = true; var u = await sb.from('site_settings').upsert({ key: d.key, value: val }); b.disabled = false;
@@ -229,6 +262,6 @@
     });
   }
 
-  window.GNForm = { upload: async function (file, dir) { var blob = await toWebp(file, 1600), path = dir + '/' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6) + '.webp'; var r = await A.sb().storage.from('media').upload(path, blob, { contentType: 'image/webp', upsert: false }); if (r.error) throw new Error(r.error.message); return path; }, F: F, group: group, el: el, clone: clone };
+  window.GNForm = { upload: uploadImage, F: F, group: group, el: el, clone: clone };
   window.GNAdminViews = { section: viewSection, settings: viewSettings };
 })();

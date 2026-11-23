@@ -43,3 +43,11 @@ Halaman Kendaraan, Destinasi, Jurnal, Kontak, dan Booking belum ada (Tahap 3-4).
 - Admin umum dan Owner: menu Konten (Paket trip, Kendaraan + tanggal terpakai, Promo & kode, Artikel, Galeri + unggah banyak foto, Destinasi). Foto otomatis diperkecil ke WebP.
 - Kendaraan: status tampil manual + tabel `vehicle_blocks` (tanggal terpakai) yang dipakai `vehicles_available`.
 - Galeri: kolom `category` menjadi indeks destinasi di halaman galeri.
+
+## Tahap 4
+- `/contact/`: form Tanya / Booking trip / Sewa kendaraan -> `POST /api/message` (honeypot, batas kirim, kode promo opsional). Dukungan tautan `?package=slug`, `?vehicle=slug`, `?promo=KODE`, `?kind=booking`.
+- Admin **Kotak masuk** (`#/pesan`): filter status (Baru, Dibalas, Selesai, Spam), detail pesan, tombol balas WhatsApp/email, catatan internal, lencana jumlah pesan baru (diperbarui tiap menit).
+- Owner: **Riwayat versi** pada editor section dan pengaturan (30 versi terakhir, tombol Pulihkan).
+- SEO: `/sitemap.xml` dan `/robots.txt` dinamis, canonical + Open Graph, JSON-LD (TravelAgency, TouristTrip + Offer, Article).
+- Keamanan: CSP untuk halaman publik (`public/_headers`), CSP admin, cache JS/CSS 10 menit.
+- Unggah gambar: semua format yang bisa dibaca browser diterima, diperkecil maks. 1600 px dan dikompres ke WebP (JPEG bila WebP tidak didukung).

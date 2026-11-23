@@ -236,3 +236,14 @@ section[id]{scroll-margin-top:calc(var(--header-h) + 64px)}
 .avail label{display:block;margin:0 0 5px;font:600 .88rem var(--font-text)}
 .avail input{width:100%;min-height:48px;padding:.6em .8em;border:1.5px solid var(--line);border-radius:12px;font:inherit;background:#fff}
 .gidx button{font-family:var(--font-display)}
+/* kontak */
+.ct{display:grid;gap:18px}.ct__form{padding:18px;display:grid;gap:4px}
+.ff label{display:block;font:600 .9rem var(--font-text);margin:10px 0 5px}.ff label small{font-weight:400;color:var(--muted)}
+.ff input,.ff select,.ff textarea{width:100%;min-height:48px;padding:.65em .85em;border:1.5px solid var(--line);border-radius:12px;font:inherit;background:#fff;color:var(--ink)}
+.ff textarea{min-height:110px}
+.ff .err,.ct .err{color:var(--err);font-size:.85rem;min-height:1.1em;margin:4px 0 0}
+.ff2{display:grid;gap:0 12px}@media(min-width:520px){.ff2{grid-template-columns:1fr 1fr}}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.ct__form .btn[type=submit]{margin-top:10px;width:100%}
+.ct__info{padding:18px;align-self:start}.ct__info ul{list-style:none;margin:0;padding:0;display:grid;gap:14px}.ct__info li b{display:block;font:800 .72rem var(--font-text);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}.ct__info a{color:var(--ink)}
+@media(min-width:900px){.ct{grid-template-columns:1.4fr 1fr;gap:32px}.ct__form .btn[type=submit]{width:auto;justify-self:start}}

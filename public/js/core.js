@@ -20,7 +20,7 @@
       itinerary: 'Rencana perjalanan', included: 'Sudah termasuk', excluded: 'Belum termasuk', highlights: 'Sorotan', back: 'Semua paket',
       notFound: 'Paket tidak ditemukan.', pkTitle: 'Paket Trip', pkLead: 'Pilih jenis trip, lihat rincian biayanya, lalu tanya langsung ke admin.', day1: 'Hari', readMore: 'Baca selengkapnya', contact: 'Kontak', hours: 'Jam layanan', explore: 'Jelajahi', vhTitle: 'Armada & Sewa Kendaraan', vhLead: 'Pilih kendaraan, cek ketersediaan di tanggalmu, lalu tanya langsung ke admin.', check: 'Cek ketersediaan', dFrom: 'Tanggal mulai', dTo: 'Sampai (opsional)', okRange: 'Tersedia di tanggal itu', noRange: 'Tidak tersedia di tanggal itu', askVh: 'Tanya & pesan', badRange: 'Tanggal sampai tidak boleh sebelum tanggal mulai.', availErr: 'Gagal mengecek ketersediaan. Coba lagi.', helloVhD: 'Halo GoNEST, saya ingin sewa ',
       galTitle: 'Galeri Perjalanan', galLead: 'Momen dari perjalanan bersama GoNEST. Arahkan kursor ke nama destinasi untuk melihat cuplikan.', galAll: 'Semua', photos: 'foto', jrTitle: 'Jurnal', jrLead: 'Tips, rute, dan cerita perjalanan dari tim GoNEST.', jrBack: 'Semua artikel', jrEmpty: 'Artikel pertama segera terbit.', empty: 'Belum ada data.',
-      promoTitle: 'Promo & kode', promoLead: 'Salin kodenya, lalu sebutkan saat memesan lewat admin.', soonPr: 'Belum ada promo aktif. Pantau terus.', claim: 'Klaim promo', copy: 'Salin kode', copied: 'Tersalin', close: 'Tutup', prev: 'Sebelumnya', next: 'Berikutnya', until: 'Berlaku sampai', terms: 'Syarat & ketentuan', off: 'Diskon', pctOff: '% off', helloPr: 'Halo GoNEST, saya ingin klaim promo ', zoom: 'Perbesar foto', read: 'Baca', },
+      promoTitle: 'Promo & kode', promoLead: 'Salin kodenya, lalu sebutkan saat memesan lewat admin.', soonPr: 'Belum ada promo aktif. Pantau terus.', claim: 'Klaim promo', copy: 'Salin kode', copied: 'Tersalin', close: 'Tutup', prev: 'Sebelumnya', next: 'Berikutnya', until: 'Berlaku sampai', terms: 'Syarat & ketentuan', off: 'Diskon', pctOff: '% off', helloPr: 'Halo GoNEST, saya ingin klaim promo ', zoom: 'Perbesar foto', read: 'Baca', ctTitle: 'Hubungi Kami', ctLead: 'Tanya paket, kirim permintaan booking, atau cek sewa kendaraan. Admin kami membalas secepatnya di jam layanan.', kAsk: 'Tanya', kBook: 'Booking trip', kVeh: 'Sewa kendaraan', fName: 'Nama', fContact: 'WhatsApp atau email', fMsg: 'Pesan', fPkg: 'Paket', fVeh: 'Kendaraan', fPax: 'Jumlah peserta', fPromo: 'Kode promo', optional: 'opsional', choose: 'Pilih...', send: 'Kirim pesan', sending: 'Mengirim...', sentT: 'Pesan terkirim', sentP: 'Terima kasih. Admin akan menghubungi lewat kontak yang kamu isi.', sentWa: 'Lanjut lewat WhatsApp', another: 'Kirim pesan lain', needName: 'Nama minimal 2 karakter.', needContact: 'Isi nomor WhatsApp atau email yang valid.', needMsg: 'Tulis pesan atau pilih paket/kendaraan.', sendErr: 'Gagal mengirim. Coba lagi atau hubungi lewat WhatsApp.', promoOk: 'Kode promo tercatat.', bookPk: 'Booking via form', },
     en: { from: 'From', days: 'days', day: 'day', detail: 'View details', ask: 'Ask on WhatsApp', all: 'All', seats: 'seats',
       available: 'Available', limited: 'Limited', booked: 'Booked', maintenance: 'Maintenance', availFrom: 'Available from',
       open: 'Open trip', private: 'Private', family: 'Family', custom: 'Custom', soonPk: 'New trip packages are coming soon. Ask our admin directly about your plans.',
@@ -29,7 +29,7 @@
       itinerary: 'Itinerary', included: 'Included', excluded: 'Not included', highlights: 'Highlights', back: 'All trips',
       notFound: 'Package not found.', pkTitle: 'Trips', pkLead: 'Pick a trip type, see the cost breakdown, then ask our admin directly.', day1: 'Day', readMore: 'Read more', contact: 'Contact', hours: 'Service hours', explore: 'Explore', vhTitle: 'Fleet & Vehicle Rental', vhLead: 'Pick a vehicle, check availability for your dates, then ask our admin directly.', check: 'Check availability', dFrom: 'Start date', dTo: 'Until (optional)', okRange: 'Available on those dates', noRange: 'Not available on those dates', askVh: 'Ask & book', badRange: 'End date cannot be before start date.', availErr: 'Could not check availability. Please try again.', helloVhD: 'Hello GoNEST, I would like to rent ',
       galTitle: 'Travel Gallery', galLead: 'Moments from trips with GoNEST. Hover a destination name for a preview.', galAll: 'All', photos: 'photos', jrTitle: 'Journal', jrLead: 'Tips, routes and travel stories from the GoNEST team.', jrBack: 'All articles', jrEmpty: 'The first article is coming soon.', empty: 'Nothing here yet.',
-      promoTitle: 'Promos & codes', promoLead: 'Copy the code and mention it when you book through our admin.', soonPr: 'No active promos right now. Check back soon.', claim: 'Claim promo', copy: 'Copy code', copied: 'Copied', close: 'Close', prev: 'Previous', next: 'Next', until: 'Valid until', terms: 'Terms & conditions', off: 'Discount', pctOff: '% off', helloPr: 'Hello GoNEST, I would like to claim the promo ', zoom: 'Enlarge photo', read: 'Read', }
+      promoTitle: 'Promos & codes', promoLead: 'Copy the code and mention it when you book through our admin.', soonPr: 'No active promos right now. Check back soon.', claim: 'Claim promo', copy: 'Copy code', copied: 'Copied', close: 'Close', prev: 'Previous', next: 'Next', until: 'Valid until', terms: 'Terms & conditions', off: 'Discount', pctOff: '% off', helloPr: 'Hello GoNEST, I would like to claim the promo ', zoom: 'Enlarge photo', read: 'Read', ctTitle: 'Contact Us', ctLead: 'Ask about trips, send a booking request, or check vehicle rental. Our admin replies as soon as possible during service hours.', kAsk: 'Ask', kBook: 'Book a trip', kVeh: 'Rent a vehicle', fName: 'Name', fContact: 'WhatsApp or email', fMsg: 'Message', fPkg: 'Package', fVeh: 'Vehicle', fPax: 'Participants', fPromo: 'Promo code', optional: 'optional', choose: 'Select...', send: 'Send message', sending: 'Sending...', sentT: 'Message sent', sentP: 'Thank you. Our admin will reach you via the contact you provided.', sentWa: 'Continue on WhatsApp', another: 'Send another', needName: 'Name must be at least 2 characters.', needContact: 'Enter a valid WhatsApp number or email.', needMsg: 'Write a message or pick a package/vehicle.', sendErr: 'Could not send. Try again or contact us on WhatsApp.', promoOk: 'Promo code recorded.', bookPk: 'Book via form', }
   };
   GN.s = function (k) { return (S[GN.lang] && S[GN.lang][k]) || S.id[k] || k; };
   GN.money = function (n) { return n == null ? '' : 'Rp ' + new Intl.NumberFormat('id-ID').format(n); };
@@ -46,8 +46,8 @@
   GN.img = function (p) { if (!p) return ''; return /^(https?:)?\/\//.test(p) || p.charAt(0) === '/' ? p : '/api/image/' + p.split('/').map(encodeURIComponent).join('/'); };
 
   /* Halaman yang sudah ada; tautan ke halaman lain sementara diarahkan ke bagian di beranda. */
-  var LIVE = ['/', '/packages', '/vehicles', '/gallery', '/journal'];
-  var FALLBACK = { '/destinations': '/gallery', '/contact': '/#kontak', '/booking': '/#kontak', '/faq': '/#kontak' };
+  var LIVE = ['/', '/packages', '/vehicles', '/gallery', '/journal', '/contact'];
+  var FALLBACK = { '/destinations': '/gallery', '/booking': '/contact/?kind=booking', '/faq': '/contact/', '/faq#kebijakan': '/contact/' };
   GN.href = function (h) {
     h = h || '#'; if (!/^\//.test(h)) return h;
     if (FALLBACK[h]) return FALLBACK[h];
@@ -146,6 +146,25 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
   }
 
+  /* ---------- SEO: canonical, Open Graph, JSON-LD ---------- */
+  GN.seo = function (o) {
+    o = o || {}; var head = document.head, abs = function (u) { try { return new URL(u, location.origin).href; } catch (e) { return ''; } };
+    var meta = function (attr, name, val) { if (!val) return; var e = head.querySelector('meta[' + attr + '="' + name + '"]'); if (!e) { e = document.createElement('meta'); e.setAttribute(attr, name); head.appendChild(e); } e.setAttribute('content', val); };
+    var url = abs(o.url || (location.pathname + (location.search.match(/[?&]slug=[^&]+/) || [''])[0].replace(/^&/, '?')));
+    var c = head.querySelector('link[rel=canonical]'); if (!c) { c = document.createElement('link'); c.rel = 'canonical'; head.appendChild(c); } c.href = url;
+    var title = o.title || document.title, desc = o.description || '', img = o.image ? abs(GN.img(o.image)) : abs('/assets/icon-512.png');
+    meta('property', 'og:title', title); meta('property', 'og:url', url); meta('property', 'og:type', o.type || 'website'); meta('property', 'og:image', img); meta('property', 'og:locale', GN.lang === 'en' ? 'en_US' : 'id_ID');
+    if (desc) { meta('property', 'og:description', desc); meta('name', 'description', desc); }
+    meta('name', 'twitter:card', 'summary_large_image');
+    var old = head.querySelector('script[data-ld]'); if (old) old.remove();
+    if (o.jsonld) { var sc = document.createElement('script'); sc.type = 'application/ld+json'; sc.setAttribute('data-ld', '1'); sc.textContent = JSON.stringify(o.jsonld).replace(/</g, '\\u003c'); head.appendChild(sc); }
+  };
+  GN.orgLd = function () {
+    var st = GN.settings, b = st.brand || {}, c = st.contact || {};
+    return { '@context': 'https://schema.org', '@type': 'TravelAgency', name: b.name || 'GoNEST', url: location.origin, logo: location.origin + '/assets/icon-512.png',
+      telephone: c.whatsapp ? '+' + c.whatsapp : undefined, email: c.email || undefined, address: GN.t(c.address) || undefined, sameAs: c.instagram ? [/^http/.test(c.instagram) ? c.instagram : 'https://instagram.com/' + c.instagram.replace(/^@/, '')] : undefined };
+  };
+
   /* ---------- siklus ---------- */
   var renders = [];
   GN.onRender = function (fn) { renders.push(fn); };
@@ -161,7 +180,7 @@
       GN.settings = st; theme(st.theme); shell();
       if (GN.ambient) GN.ambient((st.theme || {}).ambient);
       if (GN.failed) { var m = $('main'); if (m) { var b = document.createElement('div'); b.className = 'wrap'; b.innerHTML = '<div class="empty" role="alert" style="margin-top:24px"><p><b>Konten belum bisa dimuat.</b> ' + GN.esc(GN.failed) + '</p><button class="btn btn--gold btn--sm" type="button" onclick="location.reload()">Coba lagi</button></div>'; m.prepend(b); } }
-      if (GN.promoPopup && !GN.failed) GN.get('promos').then(function (l) { GN.promoPopup(l, st.promo_popup); }, function () {});
+      if (GN.promoPopup && !GN.failed && !GN.noPopup) GN.get('promos').then(function (l) { GN.promoPopup(l, st.promo_popup); }, function () {});
       if (init) return init(st);
     });
   };

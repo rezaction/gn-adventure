@@ -18,7 +18,7 @@
         '<h1>' + esc(t(a.title)) + '</h1>' + (a.published_at ? '<p class="post__d">' + esc(GN.date(a.published_at)) + '</p>' : '') +
         (a.cover ? '<div class="dt__cover">' + GN.cover(a.cover, t(a.title)) + '</div>' : '') + '<div class="post__b">' + GN.md(t(a.body)) + '</div></article>';
       document.title = t(a.title) + ' | ' + ((GN.settings.brand || {}).name || 'GoNEST');
-      var m = document.querySelector('meta[name=description]'); if (m) m.content = t(a.excerpt).slice(0, 155);
+      GN.seo({ title: document.title, description: t(a.excerpt).slice(0, 155), image: a.cover, type: 'article', jsonld: { '@context': 'https://schema.org', '@type': 'Article', headline: t(a.title), description: t(a.excerpt), image: a.cover ? location.origin + GN.img(a.cover) : undefined, datePublished: a.published_at || undefined, dateModified: a.updated_at || a.published_at || undefined, publisher: { '@type': 'Organization', name: (GN.settings.brand || {}).name || 'GoNEST' } } });
     }
     if (window.GoNEST) GoNEST.fitBrand();
   }

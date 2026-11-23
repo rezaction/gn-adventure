@@ -26,7 +26,7 @@
       '<p class="vc__m">' + v.seats + ' ' + esc(GN.s('seats')) + (note ? ' &middot; ' + esc(note) : '') + '</p>' +
       '<div class="vc__f"><span class="pill pill--' + (VCLS[v.status] || 'ok') + '">' + esc(GN.s(v.status || 'available')) + '</span>' + rng +
       (v.price_from != null ? '<b>' + esc(GN.money(v.price_from)) + '</b>' : '') + '</div>' +
-      (o.cta ? '<a class="btn btn--gold btn--sm vc__cta" href="' + esc(GN.wa(msg)) + '" target="_blank" rel="noopener">' + esc(GN.s('askVh')) + '</a>' : '') + '</div></article>';
+      (o.cta ? '<a class="btn btn--gold btn--sm vc__cta" href="' + esc(GN.wa(msg)) + '" target="_blank" rel="noopener">' + esc(GN.s('askVh')) + '</a> <a class="btn btn--ghost btn--sm vc__cta" href="/contact/?vehicle=' + encodeURIComponent(v.slug) + '">' + esc(GN.s('bookPk')) + '</a>' : '') + '</div></article>';
   };
   GN.arCard = function (a) {
     var u = '/journal/?slug=' + encodeURIComponent(a.slug);

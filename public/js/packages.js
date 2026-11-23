@@ -36,9 +36,10 @@
       ((p.excluded || []).length ? '<h2>' + esc(GN.s('excluded')) + '</h2>' + li(p.excluded, 'ul-no') : '') +
       '</div><aside class="card dt__side"><div class="price">' + (p.price_from != null ? '<small>' + esc(GN.s('from')) + '</small><b>' + esc(GN.money(p.price_from)) + '</b>' : '') + '</div>' +
       (t(p.price_note) ? '<p style="margin:0;color:var(--muted);font-size:.9rem">' + esc(t(p.price_note)) + '</p>' : '') +
-      '<a class="btn btn--gold" href="' + esc(GN.wa(msg)) + '" target="_blank" rel="noopener">' + esc(GN.s('ask')) + '</a></aside></div>';
+      '<a class="btn btn--gold" href="' + esc(GN.wa(msg)) + '" target="_blank" rel="noopener">' + esc(GN.s('ask')) + '</a><a class="btn btn--ghost" href="/contact/?package=' + encodeURIComponent(p.slug) + '">' + esc(GN.s('bookPk')) + '</a></aside></div>';
     document.title = t(p.title) + ' | ' + ((GN.settings.brand || {}).name || 'GoNEST');
-    var m = document.querySelector('meta[name=description]'); if (m) m.content = t(p.summary).slice(0, 155);
+    GN.seo({ title: document.title, description: t(p.summary).slice(0, 155), image: p.cover, type: 'product', jsonld: { '@context': 'https://schema.org', '@type': 'TouristTrip', name: t(p.title), description: t(p.summary), image: p.cover ? location.origin + GN.img(p.cover) : undefined, touristType: p.kind,
+      provider: { '@type': 'TravelAgency', name: (GN.settings.brand || {}).name || 'GoNEST' }, offers: p.price_from != null ? { '@type': 'Offer', priceCurrency: 'IDR', price: p.price_from, availability: 'https://schema.org/InStock', url: location.href } : undefined } });
   }
   function render() { if (slug) { if (one !== undefined) renderOne(); } else if (list) renderList(); if (window.GoNEST) GoNEST.fitBrand(); }
   GN.onRender(render);

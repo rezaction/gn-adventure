@@ -33,7 +33,7 @@
     var owner = me.role === 'owner';
     var a = [{ h: '#/ringkasan', t: 'Ringkasan' }];
     if (owner) a.push({ g: 'Tampilan (Owner)' }, { h: '#/section', t: 'Section & teks' }, { h: '#/pengaturan', t: 'Pengaturan situs' });
-    a.push({ g: 'Konten' }, { h: '#/c/packages', t: 'Paket trip' }, { h: '#/c/vehicles', t: 'Kendaraan' }, { h: '#/c/promos', t: 'Promo & kode' }, { h: '#/c/articles', t: 'Artikel' }, { h: '#/c/gallery_items', t: 'Galeri' }, { h: '#/c/destinations', t: 'Destinasi' });
+    a.push({ g: 'Pesan' }, { h: '#/pesan', t: 'Kotak masuk' }, { g: 'Konten' }, { h: '#/c/packages', t: 'Paket trip' }, { h: '#/c/vehicles', t: 'Kendaraan' }, { h: '#/c/promos', t: 'Promo & kode' }, { h: '#/c/articles', t: 'Artikel' }, { h: '#/c/gallery_items', t: 'Galeri' }, { h: '#/c/destinations', t: 'Destinasi' });
     a.push({ g: 'Komunikasi' }, { t: 'Kotak pesan', soon: 'T4' });
     a.push({ g: 'Sistem' });
     if (owner) a.push({ h: '#/pengguna', t: 'Pengguna' });
@@ -52,12 +52,12 @@
   /* ---------- halaman ---------- */
   async function viewHome() {
     var v = $('#view');
-    v.innerHTML = '<h1>Ringkasan</h1><p class="muted">Halo, ' + esc(me.name || me.email) + '. Kamu masuk sebagai <b>' + (me.role === 'owner' ? 'Owner' : 'Admin umum') + '</b>.</p><div class="grid" id="stats"></div><div class="note">Tahap 1 aktif: login, peran, dan manajemen pengguna. Editor konten dan tampilan menyusul di tahap berikutnya.</div>';
-    var items = [['articles', 'Artikel'], ['packages', 'Paket trip'], ['vehicles', 'Kendaraan'], ['promos', 'Promo'], ['messages', 'Pesan masuk']];
+    v.innerHTML = '<h1>Ringkasan</h1><p class="muted">Halo, ' + esc(me.name || me.email) + '. Kamu masuk sebagai <b>' + (me.role === 'owner' ? 'Owner' : 'Admin umum') + '</b>.</p><div class="grid" id="stats"></div>';
+    var items = [['messages', 'Pesan baru', '#/pesan', 'new'], ['packages', 'Paket trip', '#/c/packages'], ['vehicles', 'Kendaraan', '#/c/vehicles'], ['promos', 'Promo', '#/c/promos'], ['articles', 'Artikel', '#/c/articles']];
     var html = '';
     for (var i = 0; i < items.length; i++) {
-      var r = await sb.from(items[i][0]).select('id', { count: 'exact', head: true });
-      html += '<div class="card stat"><b>' + (r.error ? '–' : r.count) + '</b><span>' + items[i][1] + (r.error ? ' (gagal dibaca)' : '') + '</span></div>';
+      var qy = sb.from(items[i][0]).select('id', { count: 'exact', head: true }); if (items[i][3]) qy = qy.eq('status', items[i][3]); var r = await qy;
+      html += '<a class="card stat" href="' + items[i][2] + '"><b>' + (r.error ? '–' : r.count) + '</b><span>' + items[i][1] + (r.error ? ' (gagal dibaca)' : '') + '</span></a>';
     }
     $('#stats').innerHTML = html;
   }
@@ -129,16 +129,17 @@
     var h = location.hash || '#/ringkasan';
     var base = h.split('/').slice(0, 2).join('/');
     if ((h === '#/pengguna' || base === '#/section' || base === '#/pengaturan') && me.role !== 'owner') h = '#/ringkasan';
-    if (!/^#\/(ringkasan|pengguna|akun|section|pengaturan|c)(\/[A-Za-z0-9._-]+){0,2}$/.test(h)) h = '#/ringkasan';
+    if (!/^#\/(ringkasan|pengguna|akun|section|pengaturan|pesan|c)(\/[A-Za-z0-9._-]+){0,2}$/.test(h)) h = '#/ringkasan';
     base = h.split('/').slice(0, 2).join('/');
     renderNav(); $('#side').classList.remove('open'); $('#menuBtn').setAttribute('aria-expanded', 'false');
     var ext = window.GNAdminViews || {};
-    var f = { '#/ringkasan': viewHome, '#/pengguna': viewUsers, '#/akun': viewAccount, '#/section': function () { return ext.section(h.split('/')[2]); }, '#/pengaturan': function () { return ext.settings(); }, '#/c': function () { return ext.crud(h.split('/')[2], h.split('/')[3]); } }[base];
+    var f = { '#/ringkasan': viewHome, '#/pengguna': viewUsers, '#/akun': viewAccount, '#/section': function () { return ext.section(h.split('/')[2]); }, '#/pengaturan': function () { return ext.settings(); }, '#/pesan': function () { return ext.inbox(h.split('/')[2]); }, '#/c': function () { return ext.crud(h.split('/')[2], h.split('/')[3]); } }[base];
     Promise.resolve(f()).catch(function (e) { $('#view').innerHTML = '<p class="err">' + esc(e.message) + '</p>'; });
     document.title = 'Admin — GoNEST';
+    if (ext.badge) ext.badge();
   }
 
-  window.GNAdmin = { sb: function () { return sb; }, esc: esc, $: $, toast: toast };
+  window.GNAdmin = { me: function () { return me; }, sb: function () { return sb; }, esc: esc, $: $, toast: toast };
 
   /* ---------- sesi ---------- */
   async function enter() {
