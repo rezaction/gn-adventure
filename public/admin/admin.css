@@ -36,3 +36,24 @@ input:focus,select:focus,textarea:focus{outline:3px solid rgba(54,112,255,.35);b
   .side{position:fixed;left:0;top:60px;bottom:0;width:260px;height:auto;transform:translateX(-102%);transition:transform .25s var(--ease);z-index:40;box-shadow:var(--shadow-2)}
   .side.open{transform:none}
 }
+/* editor */
+.fld{margin:0 0 4px}.fld--box{border:1px solid var(--line);border-radius:var(--r-md);padding:4px 14px 14px;margin:14px 0;background:#fcfcfb}
+.gt{font:800 .75rem var(--font-text);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 2px}
+.i18n{display:grid;gap:8px}@media(min-width:700px){.i18n{grid-template-columns:1fr 1fr}}
+.i18n .lg{display:inline-block;font:800 .65rem var(--font-text);letter-spacing:.1em;background:var(--gray);border-radius:6px;padding:2px 7px;margin-bottom:4px}
+textarea{min-height:90px;resize:vertical}
+.help{font-size:.82rem;color:var(--muted);margin:.4em 0 0}
+.chk{display:flex;gap:10px;align-items:center;margin:14px 0 4px;cursor:pointer}.chk input{width:22px;height:22px;min-height:0}
+.rg{display:flex;gap:12px;align-items:center}.rg input{padding:0}.rg output{font-weight:700;min-width:2.5em}
+input[type=color]{width:72px;padding:3px}
+.rep__i{border:1px solid var(--line);border-radius:var(--r-sm);padding:6px 12px 12px;margin:10px 0;background:#fff}
+.rep__bar{display:flex;gap:6px;align-items:center;padding-top:6px}.rep__bar b{flex:1;font-size:.85rem}.rep__bar .btn{min-height:34px;padding:.2em .8em;font-size:.8rem}
+.btn--danger-o{color:var(--err);border-color:var(--err)}.btn--danger-o:hover{background:var(--err)!important;color:#fff!important}
+.img{display:grid;gap:12px}@media(min-width:700px){.img{grid-template-columns:200px 1fr}}
+.img__pv{aspect-ratio:4/3;border-radius:var(--r-sm);background:var(--gray);display:grid;place-items:center;overflow:hidden}.img__pv img{width:100%;height:100%;object-fit:cover}
+.img__ctl input[type=file]{padding:.5em}
+.slist{display:grid;gap:10px;margin-top:16px}
+.sitem{display:flex;justify-content:space-between;align-items:center;gap:12px;text-decoration:none;color:var(--ink);padding:14px 18px}.sitem:hover{box-shadow:var(--shadow-2)}.sitem b{display:block}.sitem small{color:var(--muted)}
+.crumb{display:inline-block;margin-bottom:10px;font-weight:600;text-decoration:none}
+.acc{margin:12px 0;padding:0 18px 18px}.acc summary{cursor:pointer;padding:16px 0;font:700 1.05rem var(--font-text);color:var(--ink)}
+.acc>.btn{margin-top:14px}

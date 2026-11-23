@@ -38,3 +38,9 @@ Repo GitHub > Settings > Secrets and variables > Actions: tambah `SUPABASE_URL` 
 
 ## Catatan jujur
 Kode diuji dengan Postgres lokal (skema + RLS), 46 tes API dengan Supabase tiruan, dan uji browser admin. Supabase dan Cloudflare asli belum bisa dijalankan dari sini, jadi deploy pertama mungkin butuh penyesuaian kecil. Kirim pesan galatnya, saya perbaiki.
+
+## Tahap 2: tambahan
+- Tidak ada variabel baru. Cukup push ke GitHub; Cloudflare Pages deploy otomatis.
+- Opsional untuk melihat tampilan terisi: jalankan `supabase/sample/sample_data.sql` (3 paket + 3 kendaraan contoh). Hapus nanti dari admin setelah Tahap 3.
+- Login Owner > **Section & teks** untuk ubah teks tiap bagian dan foto hero; **Pengaturan situs** untuk logo, kontak, menu, footer, warna, animasi, dan tombol chat.
+- Setelah mengubah, situs publik bisa butuh 1-2 menit untuk berubah (cache).

@@ -3,6 +3,7 @@
 import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path'; import { fileURLToPath, pathToFileURL } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = +process.argv[2] || 8140;
+const FX = JSON.parse(fs.readFileSync(path.join(root, 'tests/fixtures.json'), 'utf8'));
 const store = new Map();
 globalThis.caches = { default: { async match(r) { const x = store.get(r.url); return x && x.clone(); }, async put(r, res) { store.set(r.url, res); } } };
 
@@ -29,8 +30,16 @@ async function sb(req, res, url, body) {
     if (m === 'PATCH') { const id = url.searchParams.get('id').replace('eq.', ''); Object.assign(profiles.find((x) => x.id === id) || {}, JSON.parse(body)); return J({}, 200); }
   }
   const t = p.replace('/rest/v1/', '');
-  if (t in COUNTS) { res.writeHead(200, { 'content-type': 'application/json', 'content-range': `0-0/${COUNTS[t]}` }); return res.end(m === 'HEAD' ? '' : '[]'); }
-  if (t === 'site_settings') return J([{ key: 'brand', value: { tagline: { id: 'Tour & Transport' } } }, { key: 'contact', value: { whatsapp: '6281234567890' } }]);
+  if (t in COUNTS && m === 'HEAD') { res.writeHead(200, { 'content-type': 'application/json', 'content-range': `0-0/${COUNTS[t]}` }); return res.end(m === 'HEAD' ? '' : '[]'); }
+  if (p.startsWith('/storage/v1/object/')) { globalThis.__uploads = (globalThis.__uploads || []).concat(p); return J({ Key: p }); }
+  if (t === 'sections' && m === 'PATCH') { const id = url.searchParams.get('id').replace('eq.', ''); const row = FX.sections.find((x) => x.id === id); if (!row) return J([], 200); Object.assign(row, JSON.parse(body)); store.clear(); return J([row]); }
+  if (t === 'site_settings' && m === 'POST') { const b = JSON.parse(body); FX.settings[b.key] = b.value; store.clear(); return J([b], 201); }
+  if (t === 'sections' && url.searchParams.get('id')) { const row = FX.sections.find((x) => 'eq.' + x.id === url.searchParams.get('id')); return req.headers.accept?.includes('object') ? (row ? J(row) : J({ message: 'none' }, 406)) : J(row ? [row] : []); }
+  if (t.startsWith('site_settings')) return J(Object.entries(FX.settings).map(([key, value]) => ({ key, value })));
+  if (t.startsWith('sections')) { const pg = url.searchParams.get('page'); return J(FX.sections.map((x) => ({ visible: true, ...x })).filter((x) => !pg || pg === 'eq.' + x.page)); }
+  if (t.startsWith('packages')) { const sl = url.searchParams.get('slug'); return J(FX.packages.filter((x) => !sl || sl === 'eq.' + x.slug)); }
+  if (t.startsWith('vehicles')) return J(FX.vehicles);
+  if (t.startsWith('gallery_items') || t.startsWith('articles')) return J([]);
   return J({ message: 'nf ' + p }, 404);
 }
 

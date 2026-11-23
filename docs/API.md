@@ -26,3 +26,13 @@ Operasi CRUD konten dilakukan lewat Supabase (RLS): staf penuh untuk artikel, pr
 ## Field section (Owner)
 Tabel `sections`: `id` (mis. `home.hero`), `page`, `kind`, `sort`, `visible`, `fields` (jsonb).
 Isi `fields` yang dipakai seed: `eyebrow`, `heading`, `heading2` (opsional), `description`, `cta1`, `cta2` (opsional), foto hero dan teks kecil di foto (opsional; kunci final ditetapkan di Tahap 2). Semua teks berupa objek `{id,en}`.
+
+## Tahap 2: bentuk data yang dipakai situs
+- `sections.fields` hero: `eyebrow, heading, heading2, description, cta1{label,href}, cta2, image` (path Storage, mis. `site/abc.webp`, atau URL), `image_alt, image_text`. Jenis `list` menambah `items[{title,text}]`.
+- `site_settings`: `brand{go,nest,tagline,logo}`, `contact`, `nav{items[{label,href,visible}],cta}`, `footer{about,columns[{title,links[]}],copyright}`, `theme{palette,ambient{enabled,mode,intensity,tint}}`, `chat`.
+- `packages.itinerary`: `[{title:{id,en}, text:{id,en}}]`; `highlights/included/excluded`: `[{id,en}]`.
+- Gambar: simpan path Storage; situs memuatnya lewat `/api/image/<path>` (cache panjang).
+- Animasi latar: `mode` = `auto|leaves|rain|snow|off`. Pratinjau: tambahkan `?ambient=snow` ke alamat situs.
+
+## Tautan sementara
+Halaman Kendaraan, Destinasi, Jurnal, Kontak, dan Booking belum ada (Tahap 3-4). Tautan menu ke sana otomatis diarahkan ke bagian di beranda (`GN.href` di `public/js/core.js`). Hapus dari daftar `FALLBACK` saat halamannya jadi.

@@ -39,6 +39,6 @@ with sync_playwright() as p:
     check(m.is_visible("#menuBtn"),"tombol menu muncul di HP"); m.click("#menuBtn"); m.wait_for_timeout(350); check("open" in m.get_attribute("#side","class"),"menu samping terbuka")
     m.goto(B+"/admin/#/pengguna"); m.wait_for_timeout(700); check(m.evaluate("document.documentElement.scrollWidth<=innerWidth"),"halaman pengguna tidak meluap di 375px")
     # beranda
-    h=b.new_page(); h.goto(B+"/"); h.wait_for_timeout(800); check(h.is_visible("#wa"),"beranda membaca pengaturan dari API (tombol WhatsApp)")
+    h=b.new_page(); h.goto(B+"/"); h.wait_for_timeout(800); check(h.locator(".chat__btn").count()==1,"beranda membaca pengaturan dari API (tombol chat)")
     check(not errs,"tanpa galat JS: "+str(errs[:2])); b.close()
 print("\nGAGAL:",fails) if fails else print("\nSEMUA TES E2E LULUS"); sys.exit(1 if fails else 0)
