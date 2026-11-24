@@ -30,6 +30,8 @@
           select:function(c,o){q.params.push('select='+(c||'*'));if(o&&o.head)q.head=true;if(o&&o.count)q.count=true;return b;},
           order:function(c){q.params.push('order='+c);return b;},
           eq:function(c,v){q.params.push(c+'=eq.'+v);return b;},
+          gt:function(c,v){q.params.push(c+'=gt.'+v);return b;},
+          limit:function(n){q.params.push('limit='+n);return b;},
           single:function(){q.single=true;return b;},
           insert:function(o){q.method='POST';q.body=o;return b;},
           delete:function(){q.method='DELETE';return b;},

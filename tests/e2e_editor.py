@@ -40,7 +40,7 @@ with sync_playwright() as p:
     pub=b.new_page(viewport={"width":390,"height":800}); pub.on("pageerror",lambda e:errs.append(str(e))); pub.goto(B+"/"); pub.wait_for_timeout(1200)
     check("Liburan tanpa ribet" in pub.inner_text("h1"),"beranda menampilkan judul baru"); check(pub.evaluate("document.documentElement.dataset.ambient")=="snow","beranda memakai mode salju")
     check(pub.locator("#jurnal").count()==0,"section tersembunyi tidak tampil")
-    check("628111222333" in pub.get_attribute(".chat__pill","href"),"tautan chat memakai nomor baru")
+    check("628111222333" in pub.get_attribute("a.chat__pill","href"),"tautan chat memakai nomor baru")
     check(pub.locator(".hero__media img[src*='/api/image/site/']").count()==1,"foto hero memakai /api/image")
     check(not errs,"tanpa galat JS "+str(errs[:2])); b.close()
 print("\nGAGAL:",fails) if fails else print("\nSEMUA TES EDITOR LULUS"); sys.exit(1 if fails else 0)

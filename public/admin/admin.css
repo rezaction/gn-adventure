@@ -74,3 +74,11 @@ input[type=color]{width:72px;padding:3px}
 .msg{grid-template-columns:1fr auto}@media(min-width:760px){.msg{grid-template-columns:1fr 130px 190px}}
 a.stat{text-decoration:none;color:inherit;display:block}a.stat:hover{box-shadow:var(--shadow-2)}
 .hist{margin-top:14px}.hist__i{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray)}
+
+/* live chat admin */
+.lcl{display:flex;flex-direction:column;gap:10px;max-height:52vh;min-height:180px;overflow:auto;padding:12px;margin:12px 0;background:#efefef;border-radius:12px}
+.lcm{max-width:80%;display:flex;flex-direction:column;gap:2px}.lcm span{padding:9px 12px;border-radius:14px;word-break:break-word}
+.lcm small{font-size:.72rem;color:#666;padding:0 6px}
+.lcm--visitor{align-self:flex-start}.lcm--visitor span{background:#fff}
+.lcm--staff{align-self:flex-end;align-items:flex-end}.lcm--staff span{background:#F9D601}
+.lcf{display:flex;gap:8px}.lcf input{flex:1}

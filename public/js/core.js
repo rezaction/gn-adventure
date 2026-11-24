@@ -136,12 +136,21 @@
     var pills = [];
     if (c.whatsapp && (!ch.whatsapp || ch.whatsapp.enabled !== false)) pills.push('<a class="chat__pill" href="' + GN.esc(GN.wa()) + '" target="_blank" rel="noopener"><span class="chat__ic">' + IC.wa + '</span><span class="chat__lb">' + GN.esc(GN.t(ch.whatsapp && ch.whatsapp.label) || 'WhatsApp') + '</span></a>');
     if (c.telegram && (!ch.telegram || ch.telegram.enabled !== false)) pills.push('<a class="chat__pill" href="https://t.me/' + GN.esc(c.telegram) + '" target="_blank" rel="noopener"><span class="chat__ic">' + IC.tg + '</span><span class="chat__lb">' + GN.esc(GN.t(ch.telegram && ch.telegram.label) || 'Telegram') + '</span></a>');
+    var lv = ch.live || { enabled: true };
+    if (lv.enabled !== false && ch.enabled !== false) pills.unshift('<button class="chat__pill chat__pill--live" type="button" data-live="1"><span class="chat__ic">' + IC.chat.replace(/width="26" height="26"/, 'width="22" height="22"') + '</span><span class="chat__lb">' + GN.esc(GN.t(lv.label) || 'Live chat') + '</span></button>');
     if (!pills.length) return;
     var el = document.createElement('div'); el.id = 'chat'; el.className = 'chat';
     el.innerHTML = '<div class="chat__list" id="chat-list">' + pills.join('') + '</div><button class="chat__btn" type="button" aria-expanded="false" aria-controls="chat-list" aria-label="' + GN.esc(GN.s('chat')) + '"><span class="chat__i1">' + IC.chat + '</span><span class="chat__i2">' + IC.close + '</span></button>';
     document.body.appendChild(el);
     var btn = $('.chat__btn', el), set = function (o) { el.classList.toggle('open', o); btn.setAttribute('aria-expanded', o); };
     btn.onclick = function (e) { e.stopPropagation(); set(!el.classList.contains('open')); };
+    var lvb = $('[data-live]', el);
+    if (lvb) lvb.onclick = function (e) {
+      e.stopPropagation(); set(false);
+      var go = function () { if (window.GNLive) GNLive.open(lv); };
+      if (window.GNLive) return go();
+      var sc = document.createElement('script'); sc.src = '/js/livechat.js'; sc.onload = go; document.head.appendChild(sc);
+    };
     document.addEventListener('click', function (e) { if (!el.contains(e.target)) set(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
   }

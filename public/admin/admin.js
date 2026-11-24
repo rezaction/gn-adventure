@@ -33,8 +33,7 @@
     var owner = me.role === 'owner';
     var a = [{ h: '#/ringkasan', t: 'Ringkasan' }];
     if (owner) a.push({ g: 'Tampilan (Owner)' }, { h: '#/section', t: 'Section & teks' }, { h: '#/pengaturan', t: 'Pengaturan situs' });
-    a.push({ g: 'Pesan' }, { h: '#/pesan', t: 'Kotak masuk' }, { g: 'Konten' }, { h: '#/c/packages', t: 'Paket trip' }, { h: '#/c/vehicles', t: 'Kendaraan' }, { h: '#/c/promos', t: 'Promo & kode' }, { h: '#/c/articles', t: 'Artikel' }, { h: '#/c/gallery_items', t: 'Galeri' }, { h: '#/c/destinations', t: 'Destinasi' });
-    a.push({ g: 'Komunikasi' }, { t: 'Kotak pesan', soon: 'T4' });
+    a.push({ g: 'Pesan' }, { h: '#/pesan', t: 'Kotak masuk' }, { h: '#/chat', t: 'Live chat' }, { g: 'Konten' }, { h: '#/c/packages', t: 'Paket trip' }, { h: '#/c/vehicles', t: 'Kendaraan' }, { h: '#/c/promos', t: 'Promo & kode' }, { h: '#/c/articles', t: 'Artikel' }, { h: '#/c/gallery_items', t: 'Galeri' }, { h: '#/c/destinations', t: 'Destinasi' });
     a.push({ g: 'Sistem' });
     if (owner) a.push({ h: '#/pengguna', t: 'Pengguna' });
     a.push({ h: '#/akun', t: 'Akun saya' });
@@ -129,11 +128,11 @@
     var h = location.hash || '#/ringkasan';
     var base = h.split('/').slice(0, 2).join('/');
     if ((h === '#/pengguna' || base === '#/section' || base === '#/pengaturan') && me.role !== 'owner') h = '#/ringkasan';
-    if (!/^#\/(ringkasan|pengguna|akun|section|pengaturan|pesan|c)(\/[A-Za-z0-9._-]+){0,2}$/.test(h)) h = '#/ringkasan';
+    if (!/^#\/(ringkasan|pengguna|akun|section|pengaturan|pesan|chat|c)(\/[A-Za-z0-9._-]+){0,2}$/.test(h)) h = '#/ringkasan';
     base = h.split('/').slice(0, 2).join('/');
     renderNav(); $('#side').classList.remove('open'); $('#menuBtn').setAttribute('aria-expanded', 'false');
     var ext = window.GNAdminViews || {};
-    var f = { '#/ringkasan': viewHome, '#/pengguna': viewUsers, '#/akun': viewAccount, '#/section': function () { return ext.section(h.split('/')[2]); }, '#/pengaturan': function () { return ext.settings(); }, '#/pesan': function () { return ext.inbox(h.split('/')[2]); }, '#/c': function () { return ext.crud(h.split('/')[2], h.split('/')[3]); } }[base];
+    var f = { '#/ringkasan': viewHome, '#/pengguna': viewUsers, '#/akun': viewAccount, '#/section': function () { return ext.section(h.split('/')[2]); }, '#/pengaturan': function () { return ext.settings(); }, '#/pesan': function () { return ext.inbox(h.split('/')[2]); }, '#/chat': function () { return ext.chat(h.split('/')[2]); }, '#/c': function () { return ext.crud(h.split('/')[2], h.split('/')[3]); } }[base];
     Promise.resolve(f()).catch(function (e) { $('#view').innerHTML = '<p class="err">' + esc(e.message) + '</p>'; });
     document.title = 'Admin — GoNEST';
     if (ext.badge) ext.badge();

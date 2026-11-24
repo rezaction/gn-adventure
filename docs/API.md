@@ -51,3 +51,10 @@ Halaman Kendaraan, Destinasi, Jurnal, Kontak, dan Booking belum ada (Tahap 3-4).
 - SEO: `/sitemap.xml` dan `/robots.txt` dinamis, canonical + Open Graph, JSON-LD (TravelAgency, TouristTrip + Offer, Article).
 - Keamanan: CSP untuk halaman publik (`public/_headers`), CSP admin, cache JS/CSS 10 menit.
 - Unggah gambar: semua format yang bisa dibaca browser diterima, diperkecil maks. 1600 px dan dikompres ke WebP (JPEG bila WebP tidak didukung).
+
+## Live chat
+`POST /api/chat` `{action:"start", name, contact?, body, lang}` -> `{ok, id, token}` (simpan `id` + `token`; hanya hash token yang disimpan di server).
+`POST /api/chat` `{action:"send", id, token, body}` -> `{ok}`.
+`GET /api/chat?id=&token=` -> `{ok, status:"open|closed", messages:[{id,sender:"visitor|staff",body,created_at}]}` (polling 4-15 detik).
+Batas laju: 3 percakapan/10 menit per IP, 20 pesan/menit, 30 pesan/10 menit per percakapan. Field `hp` adalah honeypot.
+Admin membaca/membalas lewat tabel `chat_threads` dan `chat_messages` (RLS: hanya staf), memakai JWT Supabase seperti tabel lain; aplikasi HP nantinya memakai jalur yang sama.

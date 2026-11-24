@@ -14,8 +14,12 @@
     var r = await A.sb().from('messages').select('id', { count: 'exact', head: true }).eq('status', 'new');
     var b = a.querySelector('.badge'); if (b) b.remove();
     if (!r.error && r.count > 0) { var s = document.createElement('span'); s.className = 'badge'; s.textContent = r.count > 99 ? '99+' : r.count; s.setAttribute('aria-label', r.count + ' pesan baru'); a.appendChild(s); }
+    var c = $('#nav a[href="#/chat"]'); if (!c) return;
+    var q = await A.sb().from('chat_threads').select('id', { count: 'exact', head: true }).gt('unread_staff', 0);
+    var cb = c.querySelector('.badge'); if (cb) cb.remove();
+    if (!q.error && q.count > 0) { var t = document.createElement('span'); t.className = 'badge'; t.textContent = q.count > 99 ? '99+' : q.count; t.setAttribute('aria-label', q.count + ' chat belum dibaca'); c.appendChild(t); }
   }
-  setInterval(function () { if (!document.hidden && A.me()) badge(); }, 60000);
+  setInterval(function () { if (!document.hidden && A.me()) badge(); }, 20000);
 
   async function list() {
     var v = $('#view'), sb = A.sb();
@@ -53,5 +57,58 @@
     $('#dl').onclick = async function () { if (!confirm('Hapus pesan ini permanen?')) return; var d = await sb.from('messages').delete().eq('id', id); if (d.error) A.toast(d.error.message, true); else { A.toast('Dihapus'); location.hash = '#/pesan'; } };
   }
 
-  var V = window.GNAdminViews; V.inbox = function (id) { return id ? detail(id) : list(); }; V.badge = badge;
+
+  /* ---------- Live chat ---------- */
+  var poll = null;
+  function stop() { if (poll) { clearInterval(poll); poll = null; } }
+  window.addEventListener('hashchange', function () { if (!/^#\/chat/.test(location.hash)) stop(); });
+
+  async function chatList() {
+    stop();
+    var v = $('#view'), sb = A.sb(), shown = '';
+    v.innerHTML = '<h1>Live chat</h1><p class="muted">Percakapan dari tombol Live chat di situs. Halaman ini memuat ulang sendiri tiap beberapa detik.</p><div id="rows" class="rows"><p class="muted">Memuat…</p></div>';
+    async function load() {
+      var r = await sb.from('chat_threads').select('*').order('last_msg_at', { ascending: false }).limit(60);
+      if (r.error) { $('#rows').innerHTML = '<p class="err">' + esc(r.error.message) + '</p>'; return; }
+      var html = (r.data || []).map(function (t) {
+        return '<a class="card row msg" href="#/chat/' + t.id + '"><span class="c0"><b>' + esc(t.name) + '</b><small>' + esc(t.last_text || '') + '</small></span><span class="c1">' + esc(when(t.last_msg_at)) + '</span><span class="c2">' + (t.unread_staff > 0 ? '<span class="pill pill--ok">' + t.unread_staff + ' baru</span>' : '') + (t.status === 'closed' ? ' <span class="pill">Ditutup</span>' : '') + '</span></a>';
+      }).join('') || '<div class="empty"><p>Belum ada percakapan.</p></div>';
+      if (html !== shown && $('#rows')) { shown = html; $('#rows').innerHTML = html; }
+      badge();
+    }
+    await load(); poll = setInterval(function () { if (!document.hidden && /^#\/chat$/.test(location.hash)) load(); }, 5000);
+  }
+
+  async function chatThread(id) {
+    stop();
+    var v = $('#view'), sb = A.sb(), seenIds = {}, t0 = await sb.from('chat_threads').select('*').eq('id', id).single();
+    if (t0.error || !t0.data) { v.innerHTML = '<p class="err">Percakapan tidak ditemukan.</p><a href="#/chat">&larr; Kembali</a>'; return; }
+    var t = t0.data, wa = digits(t.contact), ext = [];
+    if (isMail(t.contact)) ext.push('<a class="btn btn--ghost btn--sm" href="mailto:' + esc(t.contact) + '">Email pengunjung</a>');
+    else if (wa.length >= 9) ext.push('<a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" href="https://wa.me/' + wa + '">WhatsApp pengunjung</a>');
+    v.innerHTML = '<a class="crumb" href="#/chat">&larr; Live chat</a><h1>' + esc(t.name) + '</h1><div class="card"><p class="muted">Mulai ' + esc(when(t.created_at)) + ' &middot; bahasa ' + esc((t.lang || 'id').toUpperCase()) + (t.contact ? ' &middot; ' + esc(t.contact) : '') + '</p><div class="msgact">' + ext.join(' ') + ' <button class="btn btn--ghost btn--sm" id="cl" type="button"></button></div>' +
+      '<div class="lcl" id="lcl" aria-live="polite"></div><form id="lcf" class="lcf"><input id="lct" maxlength="2000" autocomplete="off" placeholder="Tulis balasan…" aria-label="Balasan"><button class="btn btn--gold btn--sm" type="submit">Kirim</button></form></div>';
+    var log = $('#lcl'), closed = t.status === 'closed';
+    var setClosed = function () { $('#cl').textContent = closed ? 'Buka kembali' : 'Tutup percakapan'; $('#lcf').style.display = closed ? 'none' : ''; };
+    setClosed();
+    async function load() {
+      var r = await sb.from('chat_messages').select('*').eq('thread_id', id).order('created_at', { ascending: true }); if (r.error) return;
+      var add = false;
+      (r.data || []).forEach(function (m) { if (seenIds[m.id]) return; seenIds[m.id] = 1; add = true; var d = document.createElement('div'); d.className = 'lcm lcm--' + m.sender; d.innerHTML = '<span>' + esc(m.body).replace(/\n/g, '<br>') + '</span><small>' + (m.sender === 'staff' ? 'Admin' : esc(t.name)) + ' &middot; ' + esc(when(m.created_at)) + '</small>'; log.appendChild(d); });
+      if (add) log.scrollTop = log.scrollHeight;
+      if (add || t.unread_staff) { var u = await sb.from('chat_threads').update({ unread_staff: 0 }).eq('id', id); if (!u.error) { t.unread_staff = 0; badge(); } }
+    }
+    await load();
+    poll = setInterval(function () { if (!document.hidden && location.hash === '#/chat/' + id) load(); }, 4000);
+    $('#lcf').onsubmit = async function (e) {
+      e.preventDefault(); var i = $('#lct'), body = i.value.trim(); if (!body) return; i.disabled = true;
+      var r = await sb.from('chat_messages').insert({ thread_id: id, sender: 'staff', body: body, staff_id: A.me().id });
+      if (r.error) A.toast(r.error.message, true);
+      else { i.value = ''; await sb.from('chat_threads').update({ last_msg_at: new Date().toISOString(), last_text: body.slice(0, 120), unread_staff: 0 }).eq('id', id); await load(); }
+      i.disabled = false; i.focus();
+    };
+    $('#cl').onclick = async function () { var u = await sb.from('chat_threads').update({ status: closed ? 'open' : 'closed' }).eq('id', id); if (u.error) A.toast(u.error.message, true); else { closed = !closed; setClosed(); A.toast(closed ? 'Percakapan ditutup' : 'Percakapan dibuka'); } };
+  }
+
+  var V = window.GNAdminViews; V.chat = function (id) { return id ? chatThread(id) : chatList(); }; V.inbox = function (id) { return id ? detail(id) : list(); }; V.badge = badge;
 })();

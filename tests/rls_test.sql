@@ -113,3 +113,20 @@ select pg_temp.ok(not (public.validate_promo('HEMAT10')->>'valid')::boolean, 'pr
 -- batas riwayat 30
 do $$ declare i int; begin for i in 1..40 loop update public.site_settings set value=value||jsonb_build_object('n',i) where key='seo'; end loop; end $$;
 select pg_temp.ok((select count(*) from public.revisions where table_name='site_settings' and row_key='seo')=30, 'riwayat dibatasi 30 versi');
+
+-- ===== LIVE CHAT =====
+insert into auth.users(id,email) values ('00000000-0000-0000-0000-0000000000a8','chat-admin@x.id');
+insert into public.profiles(id,email,name,role) values ('00000000-0000-0000-0000-0000000000a8','chat-admin@x.id','Chat Admin','admin');
+insert into public.chat_threads(id,token_hash,name) values ('00000000-0000-0000-0000-00000000c001','h','Tamu Chat');
+insert into public.chat_messages(thread_id,sender,body) values ('00000000-0000-0000-0000-00000000c001','visitor','halo');
+set role anon;
+select pg_temp.ok((select count(*) from public.chat_threads)=0, 'anon tidak melihat percakapan chat');
+reset role;
+set role authenticated; set request.jwt.claim.sub='00000000-0000-0000-0000-0000000000a9';
+select pg_temp.ok((select count(*) from public.chat_messages)=0, 'non-staf tidak melihat chat');
+reset role;
+set role authenticated; set request.jwt.claim.sub='00000000-0000-0000-0000-0000000000a8';
+select pg_temp.ok((select count(*) from public.chat_messages)=1, 'admin umum melihat chat');
+insert into public.chat_messages(thread_id,sender,body,staff_id) values ('00000000-0000-0000-0000-00000000c001','staff','balasan','00000000-0000-0000-0000-0000000000a8');
+select pg_temp.ok((select count(*) from public.chat_messages)=2, 'admin umum bisa membalas');
+reset role;

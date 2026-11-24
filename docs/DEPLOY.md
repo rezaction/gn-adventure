@@ -44,3 +44,10 @@ Kode diuji dengan Postgres lokal (skema + RLS), 46 tes API dengan Supabase tirua
 - Opsional untuk melihat tampilan terisi: jalankan `supabase/sample/sample_data.sql` (3 paket + 3 kendaraan contoh). Hapus nanti dari admin setelah Tahap 3.
 - Login Owner > **Section & teks** untuk ubah teks tiap bagian dan foto hero; **Pengaturan situs** untuk logo, kontak, menu, footer, warna, animasi, dan tombol chat.
 - Setelah mengubah, situs publik bisa butuh 1-2 menit untuk berubah (cache).
+
+## Live chat: langkah tambahan
+1. Supabase > SQL Editor > jalankan `supabase/migrations/004_livechat.sql` (aman dijalankan ulang).
+2. Opsional: `supabase/sample/sample_data.sql` untuk data contoh (destinasi, trip, kendaraan, artikel, promo). Aman dijalankan ulang, tetapi slug yang sama akan ditimpa ke isi contoh.
+3. Unggah semua file ke GitHub seperti biasa; Cloudflare otomatis deploy. Tidak ada variabel baru.
+4. Owner mengatur tombol, sapaan, dan jam online (WIB) di Admin > Pengaturan > Tombol chat > Live chat. Di luar jam online, pengunjung diminta meninggalkan WhatsApp/email.
+Catatan: live chat memakai polling, bukan push. Notifikasi saat admin tidak membuka dashboard baru tersedia di aplikasi HP (Tahap 5).

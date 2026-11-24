@@ -173,7 +173,11 @@
     { key: 'chat', title: 'Tombol chat', fields: [
       { k: 'enabled', t: 'bool', label: 'Tampilkan tombol chat', def: true },
       { k: 'whatsapp', t: 'group', label: 'WhatsApp', fields: [{ k: 'enabled', t: 'bool', label: 'Aktif', def: true }, { k: 'label', t: 'i18n', label: 'Teks tombol' }] },
-      { k: 'telegram', t: 'group', label: 'Telegram', fields: [{ k: 'enabled', t: 'bool', label: 'Aktif', def: true }, { k: 'label', t: 'i18n', label: 'Teks tombol' }] }] },
+      { k: 'telegram', t: 'group', label: 'Telegram', fields: [{ k: 'enabled', t: 'bool', label: 'Aktif', def: true }, { k: 'label', t: 'i18n', label: 'Teks tombol' }] },
+      { k: 'live', t: 'group', label: 'Live chat (percakapan langsung di situs)', fields: [
+        { k: 'enabled', t: 'bool', label: 'Aktif', def: true }, { k: 'label', t: 'i18n', label: 'Teks tombol' },
+        { k: 'welcome', t: 'i18n', long: true, label: 'Sapaan saat admin online' }, { k: 'offline', t: 'i18n', long: true, label: 'Pesan saat admin offline' },
+        { k: 'start_hour', t: 'num', label: 'Jam online mulai (WIB, 0-23)', def: 8 }, { k: 'end_hour', t: 'num', label: 'Jam online selesai (WIB, 1-24)', def: 21 }] }] },
   ];
 
   function pathsList() { if (!$('#dl-paths')) { var d = el('datalist'); d.id = 'dl-paths'; d.innerHTML = PATHS.map(function (p) { return '<option value="' + p + '">'; }).join(''); document.body.appendChild(d); } }
